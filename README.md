@@ -3,5 +3,5 @@ Web API for POS
 
 ## EF
 Commends:
-  dotnet ef migration add "name"
-  dotnet ef database update
+* dotnet ef migration add "name"
+* dotnet ef database update
