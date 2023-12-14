@@ -4,9 +4,9 @@ namespace API.UsersComponent.Repository;
 
 public interface IStaffRepository
 {
-    Task<Staff> AddStaff();
-    Task<Staff> DeleteStaff();
-    Task<Staff> GetStaff();
+    Task<Staff> AddStaff(Staff staff);
+    Task<Staff?> DeleteStaff(Guid staffId);
+    Task<Staff?> GetStaff(Guid staffId);
     Task<IEnumerable<Staff>> GetStaffs();
-    Task<Staff> UpdateStaff();
+    Task<Staff?> UpdateStaff(Staff staff);
 }

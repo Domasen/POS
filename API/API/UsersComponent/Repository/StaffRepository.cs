@@ -1,31 +1,65 @@
-﻿using API.UsersComponent.Models;
+﻿using API.Data;
+using API.UsersComponent.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.UsersComponent.Repository;
 
 public class StaffRepository : IStaffRepository
 {
-    public Task<Staff> AddStaff()
+    private readonly DataContext _context;
+    public StaffRepository(DataContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
+    }
+    public async Task<Staff> AddStaff(Staff staff)
+    {
+        var result = await _context.Staffs.AddAsync(staff);
+        await _context.SaveChangesAsync();
+        return result.Entity;
     }
 
-    public Task<Staff> DeleteStaff()
+    public async Task<Staff?> DeleteStaff(Guid staffId)
     {
-        throw new NotImplementedException();
+        var result = await _context.Staffs.FirstOrDefaultAsync(s => s.Id == staffId);
+
+        if (result != null)
+        {
+            _context.Staffs.Remove(result);
+            await _context.SaveChangesAsync();
+            return result;
+        }
+
+        return null;
     }
 
-    public Task<Staff> GetStaff()
+    public async Task<Staff?> GetStaff(Guid staffId)
     {
-        throw new NotImplementedException();
+        return await _context.Staffs.FirstOrDefaultAsync(s => s.Id == staffId);
     }
 
-    public Task<IEnumerable<Staff>> GetStaffs()
+    public async Task<IEnumerable<Staff>> GetStaffs()
     {
-        throw new NotImplementedException();
+        return await _context.Staffs.ToListAsync();
     }
 
-    public Task<Staff> UpdateStaff()
+    public async Task<Staff?> UpdateStaff(Staff staff)
     {
-        throw new NotImplementedException();
+        var result = await _context.Staffs.FirstOrDefaultAsync(s => s.Id == staff.Id);
+
+        if (result != null)
+        {
+            result.Id = staff.Id;
+            result.FirstName = staff.FirstName;
+            result.LastName = staff.LastName;
+            result.PhoneNumber = staff.PhoneNumber;
+            result.Email = staff.Email;
+            result.HireDate = staff.HireDate;
+
+            await _context.SaveChangesAsync();
+
+            return result;
+        }
+
+        return null;
     }
 }
