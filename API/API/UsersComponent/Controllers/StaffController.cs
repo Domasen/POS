@@ -45,24 +45,24 @@ public class StaffController : ControllerBase
         return Ok(staff);
     }
 
-    [HttpDelete("Staff/{id}")]
-    public async Task<ActionResult<Staff>> DeleteStaff(Guid id)
-    {
-        try
-        {
-            var employeeToDelete = await employeeRepository.GetEmployee(id);
-
-            if (employeeToDelete == null)
-            {
-                return NotFound($"Employee with Id = {id} not found");
-            }
-
-            return await employeeRepository.DeleteEmployee(id);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error deleting data");
-        }
-    }
+    // [HttpDelete("Staff/{id}")]
+    // public async Task<ActionResult<Staff>> DeleteStaff(Guid id)
+    // {
+    //     try
+    //     {
+    //         var employeeToDelete = await employeeRepository.GetEmployee(id);
+    //
+    //         if (employeeToDelete == null)
+    //         {
+    //             return NotFound($"Employee with Id = {id} not found");
+    //         }
+    //
+    //         return await employeeRepository.DeleteEmployee(id);
+    //     }
+    //     catch (Exception)
+    //     {
+    //         return StatusCode(StatusCodes.Status500InternalServerError,
+    //             "Error deleting data");
+    //     }
+    // }
 }
