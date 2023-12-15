@@ -102,7 +102,7 @@ public class StaffController : ControllerBase
         {
             if(id != staff.Id)
             {
-                return BadRequest("Employee ID mismatch");
+                return BadRequest("Staff ID mismatch");
             }
 
             var staffToUpdate = await _staffRepository.GetStaff(id);
