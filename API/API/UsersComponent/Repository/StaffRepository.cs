@@ -13,6 +13,7 @@ public class StaffRepository : IStaffRepository
     }
     public async Task<Staff> AddStaff(Staff staff)
     {
+        staff.Id = Guid.NewGuid();
         var result = await _context.Staffs.AddAsync(staff);
         await _context.SaveChangesAsync();
         return result.Entity;
