@@ -1,68 +1,125 @@
 ﻿using API.Data;
 using API.UsersComponent.Models;
+using API.UsersComponent.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.UsersComponent.Controllers;
-
+// https://www.pragimtech.com/blog/blazor/delete-in-asp.net-core-rest-api/
 [ApiController]
 [Route("[controller]")]
 public class StaffController : ControllerBase
 {
     private readonly ILogger<StaffController> _logger;
-    private readonly DataContext _context;
-    public StaffController(ILogger<StaffController> logger, DataContext context)
+    private readonly IStaffRepository _staffRepository;
+    public StaffController(ILogger<StaffController> logger, IStaffRepository staffRepository)
     {
         _logger = logger;
-        _context = context;
+        _staffRepository = staffRepository;
     }
     
     [HttpPost("Staff")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<Staff>> CreateStaff(Staff staff)
+    public async Task<ActionResult<Staff>> CreateStaff(Staff? staff)
     {
-        staff.Id = Guid.NewGuid();
-        _context.Staffs.Add(staff);
-        await _context.SaveChangesAsync();
+        try
+        {
+            if (staff == null)
+            {
+                return BadRequest();
+            }
 
-        return Ok(await _context.Staffs.FindAsync(staff.Id));
+            var createdStaff = await _staffRepository.AddStaff(staff);
+
+            return CreatedAtAction(nameof(GetStaff), new { id = createdStaff.Id }, createdStaff);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving dara from the database");
+        }
     } 
     
     [HttpGet("Staff/Staffs")]
     public async Task<ActionResult<List<Staff>>> GetStaffs()
     {
-        return Ok(await _context.Staffs.ToListAsync());
+        try
+        {
+            return Ok(await _staffRepository.GetStaffs());
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                "Error retrieving data from the database");
+        }
     }
     
     [HttpGet("Staff/{id}")]
     public async Task<ActionResult<Staff>> GetStaff(Guid id)
     {
-        var staff = await _context.Staffs.FindAsync(id);
-        if (staff == null)
+        try
         {
-            return BadRequest("Staff not found.");
+            var result = await _staffRepository.GetStaff(id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return result;
         }
-        return Ok(staff);
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                "Error retrieving data from the database");
+        }
     }
 
-    // [HttpDelete("Staff/{id}")]
-    // public async Task<ActionResult<Staff>> DeleteStaff(Guid id)
-    // {
-    //     try
-    //     {
-    //         var employeeToDelete = await employeeRepository.GetEmployee(id);
-    //
-    //         if (employeeToDelete == null)
-    //         {
-    //             return NotFound($"Employee with Id = {id} not found");
-    //         }
-    //
-    //         return await employeeRepository.DeleteEmployee(id);
-    //     }
-    //     catch (Exception)
-    //     {
-    //         return StatusCode(StatusCodes.Status500InternalServerError,
-    //             "Error deleting data");
-    //     }
-    // }
+    [HttpDelete("Staff/{id}")]
+    public async Task<ActionResult<Staff>> DeleteStaff(Guid id)
+    {
+        try
+        {
+            var staffToDelete = await _staffRepository.GetStaff(id);
+
+            if (staffToDelete == null)
+            {
+                return NotFound($"Staff with Id = {id} not found");
+            }
+
+            return await _staffRepository.DeleteStaff(id);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                "Error deleting data");
+        }
+    }
+    
+    [HttpPut("Staff/{id}")]
+    public async Task<ActionResult<Staff>> UpdateStaff(Guid id, Staff staff)
+    {
+        try
+        {
+            if(id != staff.Id)
+            {
+                return BadRequest("Employee ID mismatch");
+            }
+
+            var staffToUpdate = await _staffRepository.GetStaff(id);
+
+            if(staffToUpdate == null)
+            {
+                return NotFound($"Staff with Id = {id} not found");
+            }
+
+            return await _staffRepository.UpdateStaff(staff);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                "Error updating data");
+        }
+    }
+    
+    
 }
