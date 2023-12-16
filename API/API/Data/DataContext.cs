@@ -1,4 +1,5 @@
-﻿using API.UsersComponent.Models;
+﻿using API.ItemComponent.Models;
+using API.UsersComponent.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
@@ -11,4 +12,6 @@ public class DataContext : DbContext
     }
 
     public DbSet<Staff> Staffs => Set<Staff>();
+
+    public DbSet<Item> Items => Set<Item>();
 }

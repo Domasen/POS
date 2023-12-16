@@ -1,4 +1,5 @@
 using API.Data;
+using API.ItemComponent.Repository;
 using API.UsersComponent.Models;
 using API.UsersComponent.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+builder.Services.AddScoped<IItemRepository, ItemRepository>();
 
 
 var app = builder.Build();
