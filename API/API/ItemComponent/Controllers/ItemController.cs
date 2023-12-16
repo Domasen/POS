@@ -64,7 +64,7 @@ public class ItemController : ControllerBase
 
             if (result == null)
             {
-                return NotFound();
+                return NotFound($"Item with Id = {id} not found");
             }
 
             return result;

@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ItemComponent\Services" />
+      <Compile Remove="Migrations\20231216192719_ItemComponent.cs" />
     </ItemGroup>
 
 </Project>

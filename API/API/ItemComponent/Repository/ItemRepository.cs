@@ -16,18 +16,18 @@ public class ItemRepository : IItemRepository
     public async Task<Item> AddItem(Item item)
     {
         item.id = Guid.NewGuid();
-        var result = await _context.Item.AddAsync(item);
+        var result = await _context.Items.AddAsync(item);
         await _context.SaveChangesAsync();
         return result.Entity;
     }
     
     public async Task<Item?> DeleteItem(Guid itemId)
     {
-        var result = await _context.Item.FirstOrDefaultAsync(s => s.id == itemId);
+        var result = await _context.Items.FirstOrDefaultAsync(s => s.id == itemId);
 
         if (result != null)
         {
-            _context.Item.Remove(result);
+            _context.Items.Remove(result);
             await _context.SaveChangesAsync();
             return result;
         }
@@ -37,19 +37,19 @@ public class ItemRepository : IItemRepository
     
     public async Task<Item?> GetItem(Guid itemId)
     {
-        return await _context.Item.FirstOrDefaultAsync(s => s.id == itemId);
+        return await _context.Items.FirstOrDefaultAsync(s => s.id == itemId);
     }
 
     public async Task<IEnumerable<Item>> GetItem()
     {
-        return await _context.Item.ToListAsync();
+        return await _context.Items.ToListAsync();
     }
     
     
     
     public async Task<Item?> UpdateItem(Item item)
     {
-        var result = await _context.Item.FirstOrDefaultAsync(s => s.id == item.id);
+        var result = await _context.Items.FirstOrDefaultAsync(s => s.id == item.id);
 
         if (result != null)
         {

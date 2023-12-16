@@ -13,5 +13,5 @@ public class DataContext : DbContext
 
     public DbSet<Staff> Staffs => Set<Staff>();
 
-    public DbSet<Item> Item => Set<Item>();
+    public DbSet<Item> Items => Set<Item>();
 }
