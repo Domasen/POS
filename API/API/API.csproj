@@ -16,4 +16,8 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Migrations\20231216192719_ItemComponent.cs" />
+    </ItemGroup>
+
 </Project>
