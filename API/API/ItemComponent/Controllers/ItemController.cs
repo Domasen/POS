@@ -21,7 +21,6 @@ public class ItemController : ControllerBase
     }
     [HttpPost("Item")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    
     public async Task<ActionResult<Item>> CreateItem(Item? item)
     {
         try
@@ -33,7 +32,7 @@ public class ItemController : ControllerBase
 
             var createdItem = await _itemRepository.AddItem(item);
 
-            return CreatedAtAction(nameof(GetItems), new { id = createdItem.id }, createdItem);
+            return CreatedAtAction(nameof(GetItems), new { id = createdItem.Id }, createdItem);
         }
         catch (Exception e)
         {
@@ -102,7 +101,7 @@ public class ItemController : ControllerBase
     {
         try
         {
-            if(id != item.id)
+            if(id != item.Id)
             {
                 return BadRequest("Item ID mismatch");
             }

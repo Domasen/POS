@@ -15,7 +15,7 @@ public class ItemRepository : IItemRepository
     
     public async Task<Item> AddItem(Item item)
     {
-        item.id = Guid.NewGuid();
+        item.Id = Guid.NewGuid();
         var result = await _context.Items.AddAsync(item);
         await _context.SaveChangesAsync();
         return result.Entity;
@@ -23,7 +23,7 @@ public class ItemRepository : IItemRepository
     
     public async Task<Item?> DeleteItem(Guid itemId)
     {
-        var result = await _context.Items.FirstOrDefaultAsync(s => s.id == itemId);
+        var result = await _context.Items.FirstOrDefaultAsync(i => i.Id == itemId);
 
         if (result != null)
         {
@@ -37,7 +37,7 @@ public class ItemRepository : IItemRepository
     
     public async Task<Item?> GetItem(Guid itemId)
     {
-        return await _context.Items.FirstOrDefaultAsync(s => s.id == itemId);
+        return await _context.Items.FirstOrDefaultAsync(i => i.Id == itemId);
     }
 
     public async Task<IEnumerable<Item>> GetItem()
@@ -49,18 +49,15 @@ public class ItemRepository : IItemRepository
     
     public async Task<Item?> UpdateItem(Item item)
     {
-        var result = await _context.Items.FirstOrDefaultAsync(s => s.id == item.id);
+        var result = await _context.Items.FirstOrDefaultAsync(i => i.Id == item.Id);
 
         if (result != null)
         {
-            result.id = item.id;
-            result.title = item.title;
-            result.imageURL = item.imageURL;
-            result.description = item.description;
-            result.amountInStock = item.amountInStock;
-            result.discountPercentage = item.discountPercentage;
-            result.price = item.price;
-            result.isHidden = item.isHidden;
+            result.Id = item.Id;
+            result.DiscountId = item.DiscountId;
+            result.Name = item.Name;
+            result.Description = item.Description;
+            result.Price = item.Price;
 
             await _context.SaveChangesAsync();
 
