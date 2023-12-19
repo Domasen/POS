@@ -16,7 +16,7 @@ builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(builder.
 
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
-
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 
 var app = builder.Build();
 
