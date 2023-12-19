@@ -1,4 +1,4 @@
-﻿using API.ItemComponent.Models;
+﻿using API.ItemServiceComponent.Models;
 using API.UsersComponent.Models;
 using Microsoft.EntityFrameworkCore;
 

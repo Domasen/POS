@@ -1,8 +1,8 @@
 ﻿using API.Data;
-using API.ItemComponent.Models;
+using API.ItemServiceComponent.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.ItemComponent.Repository;
+namespace API.ItemServiceComponent.Repository;
 
 public class ServiceRepository : IServiceRepository
 {

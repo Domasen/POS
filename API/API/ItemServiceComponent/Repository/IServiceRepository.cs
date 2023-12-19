@@ -1,6 +1,6 @@
-﻿using API.ItemComponent.Models;
+﻿using API.ItemServiceComponent.Models;
 
-namespace API.ItemComponent.Repository;
+namespace API.ItemServiceComponent.Repository;
 
 public interface IServiceRepository
 {

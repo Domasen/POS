@@ -1,5 +1,5 @@
 using API.Data;
-using API.ItemComponent.Repository;
+using API.ItemServiceComponent.Repository;
 using API.UsersComponent.Models;
 using API.UsersComponent.Repository;
 using Microsoft.EntityFrameworkCore;

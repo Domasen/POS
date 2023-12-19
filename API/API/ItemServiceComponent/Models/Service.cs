@@ -1,4 +1,4 @@
-﻿namespace API.ItemComponent.Models;
+﻿namespace API.ItemServiceComponent.Models;
 
 public class Service
 {

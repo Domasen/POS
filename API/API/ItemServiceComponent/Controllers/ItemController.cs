@@ -1,10 +1,8 @@
-﻿using API.Data;
-using API.ItemComponent.Models;
-using API.ItemComponent.Repository;
+﻿using API.ItemServiceComponent.Models;
+using API.ItemServiceComponent.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace API.ItemComponent.Controllers;
+namespace API.ItemServiceComponent.Controllers;
 // https://www.pragimtech.com/blog/blazor/delete-in-asp.net-core-rest-api/
 [ApiController]
 [Route("[controller]")]
