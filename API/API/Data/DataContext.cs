@@ -16,4 +16,5 @@ public class DataContext : DbContext
     public DbSet<Item> Items => Set<Item>();
     
     public DbSet<Service> Services => Set<Service>();
+    public DbSet<Customer> Customers => Set<Customer>();
 }
