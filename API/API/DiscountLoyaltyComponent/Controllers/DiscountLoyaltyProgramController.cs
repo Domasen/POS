@@ -69,6 +69,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
                 return NotFound($"LoyaltyProgram with Id = {id} not found");
             }
 
+            
             return result;
         }
         catch (Exception)
