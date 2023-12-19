@@ -41,7 +41,7 @@ public class ServiceRepository : IServiceRepository
         return await _context.Services.FirstOrDefaultAsync(s => s.Id == serviceId);
     }
 
-    public async Task<IEnumerable<Service>> GetService()
+    public async Task<IEnumerable<Service>> GetServices()
     {
         return await _context.Services.ToListAsync();
     }

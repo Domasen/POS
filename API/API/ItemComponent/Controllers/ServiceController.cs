@@ -46,7 +46,7 @@ public class ServiceController : ControllerBase
     {
         try
         {
-            return Ok(await _serviceRepository.GetService());
+            return Ok(await _serviceRepository.GetServices());
         }
         catch (Exception)
         {
