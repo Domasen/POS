@@ -20,4 +20,8 @@
       <Compile Remove="Migrations\20231216192719_ItemComponent.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations" />
+    </ItemGroup>
+
 </Project>
