@@ -19,26 +19,6 @@ public class DiscountLoyaltyProgramController : ControllerBase
         _discountRepository = discountRepository;
         _loyaltyProgramRepository = loyaltyProgramRepository;
     }
-    [HttpPost("Discount")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<Discount>> CreateDiscount(Discount? discount)
-    {
-        try
-        {
-            if (discount == null)
-            {
-                return BadRequest();
-            }
-
-            var createdDiscount = await _discountRepository.AddDiscount(discount);
-
-            return CreatedAtAction(nameof(GetDiscount), new { id = createdDiscount.Id }, createdDiscount);
-        }
-        catch (Exception e)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
-        }
-    }
     
     [HttpPost("LoyaltyProgram")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -61,12 +41,12 @@ public class DiscountLoyaltyProgramController : ControllerBase
         }
     }
     
-    [HttpGet("Discount/Discounts")]
-    public async Task<ActionResult<List<Discount>>> GetDiscounts()
+    [HttpGet("LoyaltyProgram/LoyaltyPrograms")]
+    public async Task<ActionResult<List<LoyaltyProgram>>> GetLoyaltyPrograms()
     {
         try
         {
-            return Ok(await _discountRepository.GetDiscount());
+            return Ok(await _loyaltyProgramRepository.GetLoyaltyProgram());
         }
         catch (Exception)
         {
@@ -75,12 +55,103 @@ public class DiscountLoyaltyProgramController : ControllerBase
         }
     }
     
-    [HttpGet("LoyaltyProgram/LoyaltyPrograms")]
-    public async Task<ActionResult<List<LoyaltyProgram>>> GetLoyaltyPrograms()
+    
+    
+    [HttpGet("LoyaltyProgram/{id}")]
+    public async Task<ActionResult<LoyaltyProgram>> GetLoyaltyProgram(Guid id)
     {
         try
         {
-            return Ok(await _loyaltyProgramRepository.GetLoyaltyProgram());
+            var result = await _loyaltyProgramRepository.GetLoyaltyProgram(id);
+
+            if (result == null)
+            {
+                return NotFound($"LoyaltyProgram with Id = {id} not found");
+            }
+
+            return result;
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                "Error retrieving data from the database");
+        }
+    }
+
+    [HttpDelete("LoyaltyProgram/{id}")]
+    public async Task<ActionResult<LoyaltyProgram>> DeleteLoyaltyProgram(Guid id)
+    {
+        try
+        {
+            var loyaltyProgramToDelete = await _loyaltyProgramRepository.GetLoyaltyProgram(id);
+
+            if (loyaltyProgramToDelete == null)
+            {
+                return NotFound($"LoyaltyProgram with Id = {id} not found");
+            }
+
+            return await _loyaltyProgramRepository.DeleteLoyaltyProgram(id);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                "Error deleting data");
+        }
+    }
+
+    [HttpPut("LoyaltyProgram/{id}")]
+    public async Task<ActionResult<LoyaltyProgram>> UpdateLoyaltyProgram(Guid id, LoyaltyProgram loyaltyProgram)
+    {
+        try
+        {
+            if(id != loyaltyProgram.Id)
+            {
+                return BadRequest("LoyaltyProgram ID mismatch");
+            }
+
+            var loyaltyProgramToUpdate = await _loyaltyProgramRepository.GetLoyaltyProgram(id);
+
+            if(loyaltyProgramToUpdate == null)
+            {
+                return NotFound($"LoyaltyProgram with Id = {id} not found");
+            }
+
+            return await _loyaltyProgramRepository.UpdateLoyaltyProgram(loyaltyProgram);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                "Error updating data");
+        }
+    }
+    
+    [HttpPost("Discount")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    public async Task<ActionResult<Discount>> CreateDiscount(Discount? discount)
+    {
+        try
+        {
+            if (discount == null)
+            {
+                return BadRequest();
+            }
+
+            var createdDiscount = await _discountRepository.AddDiscount(discount);
+
+            return CreatedAtAction(nameof(GetDiscount), new { id = createdDiscount.Id }, createdDiscount);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
+        }
+    }
+ 
+    [HttpGet("Discount/Discounts")]
+    public async Task<ActionResult<List<Discount>>> GetDiscounts()
+    {
+        try
+        {
+            return Ok(await _discountRepository.GetDiscount());
         }
         catch (Exception)
         {
@@ -110,28 +181,6 @@ public class DiscountLoyaltyProgramController : ControllerBase
         }
     }
     
-    [HttpGet("LoyaltyProgram/{id}")]
-    public async Task<ActionResult<LoyaltyProgram>> GetLoyaltyProgram(Guid id)
-    {
-        try
-        {
-            var result = await _loyaltyProgramRepository.GetLoyaltyProgram(id);
-
-            if (result == null)
-            {
-                return NotFound($"LoyaltyProgram with Id = {id} not found");
-            }
-
-            return result;
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error retrieving data from the database");
-        }
-    }
-    
-    
     [HttpDelete("Discount/{id}")]
     public async Task<ActionResult<Discount>> DeleteDiscount(Guid id)
     {
@@ -145,27 +194,6 @@ public class DiscountLoyaltyProgramController : ControllerBase
             }
 
             return await _discountRepository.DeleteDiscount(id);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error deleting data");
-        }
-    }
-    
-    [HttpDelete("LoyaltyProgram/{id}")]
-    public async Task<ActionResult<LoyaltyProgram>> DeleteLoyaltyProgram(Guid id)
-    {
-        try
-        {
-            var loyaltyProgramToDelete = await _loyaltyProgramRepository.GetLoyaltyProgram(id);
-
-            if (loyaltyProgramToDelete == null)
-            {
-                return NotFound($"LoyaltyProgram with Id = {id} not found");
-            }
-
-            return await _loyaltyProgramRepository.DeleteLoyaltyProgram(id);
         }
         catch (Exception)
         {
@@ -199,31 +227,4 @@ public class DiscountLoyaltyProgramController : ControllerBase
                 "Error updating data");
         }
     }
-    
-    [HttpPut("LoyaltyProgram/{id}")]
-    public async Task<ActionResult<LoyaltyProgram>> UpdateLoyaltyProgram(Guid id, LoyaltyProgram loyaltyProgram)
-    {
-        try
-        {
-            if(id != loyaltyProgram.Id)
-            {
-                return BadRequest("LoyaltyProgram ID mismatch");
-            }
-
-            var loyaltyProgramToUpdate = await _loyaltyProgramRepository.GetLoyaltyProgram(id);
-
-            if(loyaltyProgramToUpdate == null)
-            {
-                return NotFound($"LoyaltyProgram with Id = {id} not found");
-            }
-
-            return await _loyaltyProgramRepository.UpdateLoyaltyProgram(loyaltyProgram);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error updating data");
-        }
-    }
- 
 }
