@@ -17,42 +17,73 @@ namespace API.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.24");
 
-            modelBuilder.Entity("API.ItemComponent.Models.Item", b =>
+            modelBuilder.Entity("API.DiscountLoyaltyComponent.Models.Discount", b =>
                 {
-                    b.Property<Guid>("id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("amountInStock")
+                    b.Property<string>("DiscountName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("DiscountPercentage")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ValidUntil")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Discounts");
+                });
+
+            modelBuilder.Entity("API.DiscountLoyaltyComponent.Models.LoyaltyProgram", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("BusinessId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PointsPerPurchase")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("description")
-                        .IsRequired()
+                    b.Property<string>("RedemptionRules")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("discountPercentage")
+                    b.Property<string>("SpecialBenefits")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("imageURL")
-                        .IsRequired()
+                    b.HasKey("Id");
+
+                    b.ToTable("LoyaltyPrograms");
+                });
+
+            modelBuilder.Entity("API.ItemServiceComponent.Models.Item", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isHidden")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("price")
+                    b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("title")
-                        .IsRequired()
+                    b.Property<Guid?>("DiscountId")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("id");
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("API.ItemComponent.Models.Service", b =>
+            modelBuilder.Entity("API.ItemServiceComponent.Models.Service", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
