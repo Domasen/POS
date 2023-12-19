@@ -1,4 +1,5 @@
 using API.Data;
+using API.DiscountLoyaltyComponent.Repository;
 using API.ItemServiceComponent.Repository;
 using API.UsersComponent.Models;
 using API.UsersComponent.Repository;
@@ -17,6 +18,8 @@ builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(builder.
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+builder.Services.AddScoped<ILoyaltyProgramRepository, LoyaltyProgramRepository>();
 
 var app = builder.Build();
 
