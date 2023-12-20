@@ -40,7 +40,7 @@ public class ItemRepository : IItemRepository
         return await _context.Items.FirstOrDefaultAsync(i => i.Id == itemId);
     }
 
-    public async Task<IEnumerable<Item>> GetItem()
+    public async Task<IEnumerable<Item>> GetItems()
     {
         return await _context.Items.ToListAsync();
     }

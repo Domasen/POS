@@ -7,6 +7,6 @@ public interface IItemRepository
     Task<Item> AddItem(Item item);
     Task<Item?> DeleteItem(Guid itemId);
     Task<Item?> GetItem(Guid itemId);
-    Task<IEnumerable<Item>> GetItem();
+    Task<IEnumerable<Item>> GetItems();
     Task<Item?> UpdateItem (Item item);
 }
