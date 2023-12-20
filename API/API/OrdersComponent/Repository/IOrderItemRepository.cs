@@ -8,5 +8,5 @@ public interface IOrderItemRepository
     Task<OrderItem?> DeleteOrderItem(Guid orderItemId);
     Task<OrderItem?> GetOrderItem(Guid orderItemId);
     Task<IEnumerable<OrderItem>> GetOrderItems();
-    Task<OrderItem?> UpdateOrderItem (Order orderItem);
+    Task<OrderItem?> UpdateOrderItem (OrderItem orderItem);
 }

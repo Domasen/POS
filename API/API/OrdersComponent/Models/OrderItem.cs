@@ -2,7 +2,9 @@
 
 public enum OrderItemType
 {
-    
+    Item,
+    Service,
+    Appointment
 }
 
 public class OrderItem
