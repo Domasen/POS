@@ -43,7 +43,7 @@ public class ItemController : ControllerBase
     {
         try
         {
-            return Ok(await _itemRepository.GetItem());
+            return Ok(await _itemRepository.GetItems());
         }
         catch (Exception)
         {
