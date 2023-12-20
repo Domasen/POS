@@ -1,6 +1,7 @@
 using API.Data;
 using API.DiscountLoyaltyComponent.Repository;
 using API.ItemServiceComponent.Repository;
+using API.PaymentComponent.Repository;
 using API.UsersComponent.Models;
 using API.UsersComponent.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,8 @@ builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 builder.Services.AddScoped<ILoyaltyProgramRepository, LoyaltyProgramRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
 
 var app = builder.Build();
 
