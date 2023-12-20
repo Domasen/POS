@@ -1,5 +1,6 @@
 ﻿using API.DiscountLoyaltyComponent.Models;
 using API.ItemServiceComponent.Models;
+using API.OrdersComponent.Models;
 using API.UsersComponent.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,4 +21,5 @@ public class DataContext : DbContext
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Discount> Discounts => Set<Discount>();
     public DbSet<LoyaltyProgram> LoyaltyPrograms => Set<LoyaltyProgram>();
+    public DbSet<Order> Orders => Set<Order>();
 }
