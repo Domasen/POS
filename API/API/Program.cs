@@ -1,6 +1,7 @@
 using API.Data;
 using API.DiscountLoyaltyComponent.Repository;
 using API.ItemServiceComponent.Repository;
+using API.OrdersComponent.Models;
 using API.OrdersComponent.Repository;
 using API.PaymentComponent.Repository;
 using API.UsersComponent.Models;
@@ -36,6 +37,7 @@ builder.Services.AddScoped<ILoyaltyProgramRepository, LoyaltyProgramRepository>(
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 
 var app = builder.Build();
 
