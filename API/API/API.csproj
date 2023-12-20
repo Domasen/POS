@@ -22,6 +22,8 @@
 
     <ItemGroup>
       <Folder Include="Migrations" />
+      <Folder Include="OrdersComponent\Controllers" />
+      <Folder Include="OrdersComponent\Repository" />
     </ItemGroup>
 
 </Project>
