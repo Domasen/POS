@@ -1,8 +1,7 @@
-﻿using API.Data;
-using API.UsersComponent.Models;
+﻿using API.UsersComponent.Models;
 using API.UsersComponent.Repository;
+using API.UsersComponent.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.UsersComponent.Controllers;
 // https://www.pragimtech.com/blog/blazor/delete-in-asp.net-core-rest-api/
@@ -11,13 +10,13 @@ namespace API.UsersComponent.Controllers;
 public class CustomerStaffController : ControllerBase
 {
     private readonly ILogger<CustomerStaffController> _logger;
-    private readonly IStaffRepository _staffRepository;
-    private readonly ICustomerRepository _customerRepository;
-    public CustomerStaffController(ILogger<CustomerStaffController> logger, IStaffRepository staffRepository, ICustomerRepository customerRepository)
+    private readonly IStaffServices _staffServices;
+    private readonly ICustomerServices _customerServices;
+    public CustomerStaffController(ILogger<CustomerStaffController> logger, IStaffServices staffServices, ICustomerServices customerServices)
     {
         _logger = logger;
-        _staffRepository = staffRepository;
-        _customerRepository = customerRepository;
+        _staffServices = staffServices;
+        _customerServices = customerServices;
     }
     
     [HttpPost("Staff")]
@@ -31,7 +30,7 @@ public class CustomerStaffController : ControllerBase
                 return BadRequest();
             }
 
-            var createdStaff = await _staffRepository.AddStaff(staff);
+            var createdStaff = await _staffServices.AddStaff(staff);
 
             return CreatedAtAction(nameof(GetStaff), new { id = createdStaff.Id }, createdStaff);
         }
@@ -46,7 +45,7 @@ public class CustomerStaffController : ControllerBase
     {
         try
         {
-            return Ok(await _staffRepository.GetStaffs());
+            return Ok(await _staffServices.GetStaffs());
         }
         catch (Exception)
         {
@@ -60,7 +59,7 @@ public class CustomerStaffController : ControllerBase
     {
         try
         {
-            var result = await _staffRepository.GetStaff(id);
+            var result = await _staffServices.GetStaff(id);
 
             if (result == null)
             {
@@ -81,14 +80,14 @@ public class CustomerStaffController : ControllerBase
     {
         try
         {
-            var staffToDelete = await _staffRepository.GetStaff(id);
+            var staffToDelete = await _staffServices.GetStaff(id);
 
             if (staffToDelete == null)
             {
                 return NotFound($"Staff with Id = {id} not found");
             }
 
-            return await _staffRepository.DeleteStaff(id);
+            return await _staffServices.DeleteStaff(id);
         }
         catch (Exception)
         {
@@ -107,14 +106,14 @@ public class CustomerStaffController : ControllerBase
                 return BadRequest("Staff ID mismatch");
             }
 
-            var staffToUpdate = await _staffRepository.GetStaff(id);
+            var staffToUpdate = await _staffServices.GetStaff(id);
 
             if(staffToUpdate == null)
             {
                 return NotFound($"Staff with Id = {id} not found");
             }
 
-            return await _staffRepository.UpdateStaff(staff);
+            return await _staffServices.UpdateStaff(staff);
         }
         catch (Exception)
         {
@@ -135,7 +134,7 @@ public class CustomerStaffController : ControllerBase
                 return BadRequest();
             }
 
-            var createdCustomer = await _customerRepository.AddCustomer(customer);
+            var createdCustomer = await _customerServices.AddCustomer(customer);
 
             return CreatedAtAction(nameof(GetCustomer), new { id = createdCustomer.Id }, createdCustomer);
         }
@@ -150,7 +149,7 @@ public class CustomerStaffController : ControllerBase
     {
         try
         {
-            return Ok(await _customerRepository.GetCustomers());
+            return Ok(await _customerServices.GetCustomers());
         }
         catch (Exception)
         {
@@ -164,7 +163,7 @@ public class CustomerStaffController : ControllerBase
     {
         try
         {
-            var result = await _customerRepository.GetCustomer(id);
+            var result = await _customerServices.GetCustomer(id);
 
             if (result == null)
             {
@@ -185,14 +184,14 @@ public class CustomerStaffController : ControllerBase
     {
         try
         {
-            var customerToDelete = await _customerRepository.GetCustomer(id);
+            var customerToDelete = await _customerServices.GetCustomer(id);
 
             if (customerToDelete == null)
             {
                 return NotFound($"Customer with Id = {id} not found");
             }
 
-            return await _customerRepository.DeleteCustomer(id);
+            return await _customerServices.DeleteCustomer(id);
         }
         catch (Exception)
         {
@@ -211,14 +210,14 @@ public class CustomerStaffController : ControllerBase
                 return BadRequest("Staff ID mismatch");
             }
 
-            var customerToUpdate = await _customerRepository.GetCustomer(id);
+            var customerToUpdate = await _customerServices.GetCustomer(id);
 
             if(customerToUpdate == null)
             {
                 return NotFound($"Customer with Id = {id} not found");
             }
 
-            return await _customerRepository.UpdateCustomer(customer);
+            return await _customerServices.UpdateCustomer(customer);
         }
         catch (Exception)
         {
