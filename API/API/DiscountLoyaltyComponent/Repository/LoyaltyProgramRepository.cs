@@ -40,7 +40,7 @@ public class LoyaltyProgramRepository : ILoyaltyProgramRepository
         return await _context.LoyaltyPrograms.FirstOrDefaultAsync(l => l.Id == loyaltyProgramId);
     }
 
-    public async Task<IEnumerable<LoyaltyProgram>> GetLoyaltyProgram()
+    public async Task<IEnumerable<LoyaltyProgram>> GetLoyaltyPrograms()
     {
         return await _context.LoyaltyPrograms.ToListAsync();
     }
@@ -54,7 +54,6 @@ public class LoyaltyProgramRepository : ILoyaltyProgramRepository
         if (result != null)
         {
             result.Id = loyaltyProgram.Id;
-            result.BusinessId = loyaltyProgram.BusinessId;
             result.PointsPerPurchase = loyaltyProgram.PointsPerPurchase;
             result.RedemptionRules = loyaltyProgram.RedemptionRules;
             result.SpecialBenefits = loyaltyProgram.SpecialBenefits;

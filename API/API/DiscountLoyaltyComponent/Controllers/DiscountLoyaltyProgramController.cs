@@ -1,5 +1,6 @@
 ﻿using API.DiscountLoyaltyComponent.Models;
 using API.DiscountLoyaltyComponent.Repository;
+using API.DiscountLoyaltyComponent.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.DiscountLoyaltyComponent.Controllers;
@@ -10,14 +11,14 @@ namespace API.DiscountLoyaltyComponent.Controllers;
 public class DiscountLoyaltyProgramController : ControllerBase
 {
     private readonly ILogger<DiscountLoyaltyProgramController> _logger;
-    private readonly IDiscountRepository _discountRepository;
-    private readonly ILoyaltyProgramRepository _loyaltyProgramRepository;
+    private readonly IDiscountServices _discountServices;
+    private readonly ILoyaltyProgramServices _loyaltyProgramServices;
     
-    public DiscountLoyaltyProgramController(ILogger<DiscountLoyaltyProgramController> logger, IDiscountRepository discountRepository, ILoyaltyProgramRepository loyaltyProgramRepository)
+    public DiscountLoyaltyProgramController(ILogger<DiscountLoyaltyProgramController> logger, IDiscountServices discountServices, ILoyaltyProgramServices loyaltyProgramServices)
     {
         _logger = logger;
-        _discountRepository = discountRepository;
-        _loyaltyProgramRepository = loyaltyProgramRepository;
+        _discountServices = discountServices;
+        _loyaltyProgramServices = loyaltyProgramServices;
     }
     
     [HttpPost("LoyaltyProgram")]
@@ -31,7 +32,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
                 return BadRequest();
             }
 
-            var createdLoyaltyProgram = await _loyaltyProgramRepository.AddLoyaltyProgram(loyaltyProgram);
+            var createdLoyaltyProgram = await _loyaltyProgramServices.AddLoyaltyProgram(loyaltyProgram);
 
             return CreatedAtAction(nameof(GetLoyaltyProgram), new { id = createdLoyaltyProgram.Id }, createdLoyaltyProgram);
         }
@@ -46,7 +47,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
     {
         try
         {
-            return Ok(await _loyaltyProgramRepository.GetLoyaltyProgram());
+            return Ok(await _loyaltyProgramServices.GetLoyaltyPrograms());
         }
         catch (Exception)
         {
@@ -62,7 +63,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
     {
         try
         {
-            var result = await _loyaltyProgramRepository.GetLoyaltyProgram(id);
+            var result = await _loyaltyProgramServices.GetLoyaltyProgram(id);
 
             if (result == null)
             {
@@ -84,14 +85,14 @@ public class DiscountLoyaltyProgramController : ControllerBase
     {
         try
         {
-            var loyaltyProgramToDelete = await _loyaltyProgramRepository.GetLoyaltyProgram(id);
+            var loyaltyProgramToDelete = await _loyaltyProgramServices.GetLoyaltyProgram(id);
 
             if (loyaltyProgramToDelete == null)
             {
                 return NotFound($"LoyaltyProgram with Id = {id} not found");
             }
 
-            return await _loyaltyProgramRepository.DeleteLoyaltyProgram(id);
+            return await _loyaltyProgramServices.DeleteLoyaltyProgram(id);
         }
         catch (Exception)
         {
@@ -110,14 +111,14 @@ public class DiscountLoyaltyProgramController : ControllerBase
                 return BadRequest("LoyaltyProgram ID mismatch");
             }
 
-            var loyaltyProgramToUpdate = await _loyaltyProgramRepository.GetLoyaltyProgram(id);
+            var loyaltyProgramToUpdate = await _loyaltyProgramServices.GetLoyaltyProgram(id);
 
             if(loyaltyProgramToUpdate == null)
             {
                 return NotFound($"LoyaltyProgram with Id = {id} not found");
             }
 
-            return await _loyaltyProgramRepository.UpdateLoyaltyProgram(loyaltyProgram);
+            return await _loyaltyProgramServices.UpdateLoyaltyProgram(loyaltyProgram);
         }
         catch (Exception)
         {
@@ -137,7 +138,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
                 return BadRequest();
             }
 
-            var createdDiscount = await _discountRepository.AddDiscount(discount);
+            var createdDiscount = await _discountServices.AddDiscount(discount);
 
             return CreatedAtAction(nameof(GetDiscount), new { id = createdDiscount.Id }, createdDiscount);
         }
@@ -152,7 +153,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
     {
         try
         {
-            return Ok(await _discountRepository.GetDiscount());
+            return Ok(await _discountServices.GetDiscounts());
         }
         catch (Exception)
         {
@@ -166,7 +167,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
     {
         try
         {
-            var result = await _discountRepository.GetDiscount(id);
+            var result = await _discountServices.GetDiscount(id);
 
             if (result == null)
             {
@@ -187,14 +188,14 @@ public class DiscountLoyaltyProgramController : ControllerBase
     {
         try
         {
-            var discountToDelete = await _discountRepository.GetDiscount(id);
+            var discountToDelete = await _discountServices.GetDiscount(id);
 
             if (discountToDelete == null)
             {
                 return NotFound($"Discount with Id = {id} not found");
             }
 
-            return await _discountRepository.DeleteDiscount(id);
+            return await _discountServices.DeleteDiscount(id);
         }
         catch (Exception)
         {
@@ -213,14 +214,14 @@ public class DiscountLoyaltyProgramController : ControllerBase
                 return BadRequest("Discount ID mismatch");
             }
 
-            var discountToUpdate = await _discountRepository.GetDiscount(id);
+            var discountToUpdate = await _discountServices.GetDiscount(id);
 
             if(discountToUpdate == null)
             {
                 return NotFound($"Discount with Id = {id} not found");
             }
 
-            return await _discountRepository.UpdateDiscount(discount);
+            return await _discountServices.UpdateDiscount(discount);
         }
         catch (Exception)
         {
