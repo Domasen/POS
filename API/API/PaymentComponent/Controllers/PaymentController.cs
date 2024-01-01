@@ -1,6 +1,7 @@
 ﻿using API.Data;
 using API.PaymentComponent.Models;
 using API.PaymentComponent.Repository;
+using API.PaymentComponent.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,12 +12,12 @@ namespace API.PaymentComponent.Controllers;
 public class PaymentController : ControllerBase
 {
     private readonly ILogger<PaymentController> _logger;
-    private readonly IPaymentRepository _paymentRepository;
+    private readonly IPaymentServices _paymentServices;
     private readonly IPaymentMethodRepository _paymentMethodRepository;
-    public PaymentController(ILogger<PaymentController> logger, IPaymentRepository paymentRepository, IPaymentMethodRepository paymentMethodRepository)
+    public PaymentController(ILogger<PaymentController> logger, IPaymentServices paymentServices, IPaymentMethodRepository paymentMethodRepository)
     {
         _logger = logger;
-        _paymentRepository = paymentRepository;
+        _paymentServices = paymentServices;
         _paymentMethodRepository = paymentMethodRepository;
     }
     
@@ -31,7 +32,7 @@ public class PaymentController : ControllerBase
                 return BadRequest();
             }
 
-            var createdPayment = await _paymentRepository.AddPayment(payment);
+            var createdPayment = await _paymentServices.AddPayment(payment);
 
             return CreatedAtAction(nameof(GetPayment), new { id = createdPayment.Id }, createdPayment);
         }
@@ -46,7 +47,7 @@ public class PaymentController : ControllerBase
     {
         try
         {
-            return Ok(await _paymentRepository.GetPayments());
+            return Ok(await _paymentServices.GetPayments());
         }
         catch (Exception)
         {
@@ -60,7 +61,7 @@ public class PaymentController : ControllerBase
     {
         try
         {
-            var result = await _paymentRepository.GetPayment(id);
+            var result = await _paymentServices.GetPayment(id);
 
             if (result == null)
             {
@@ -81,14 +82,14 @@ public class PaymentController : ControllerBase
     {
         try
         {
-            var paymentToDelete = await _paymentRepository.GetPayment(id);
+            var paymentToDelete = await _paymentServices.GetPayment(id);
 
             if (paymentToDelete == null)
             {
                 return NotFound($"Payment with Id = {id} not found");
             }
 
-            return await _paymentRepository.DeletePayment(id);
+            return await _paymentServices.DeletePayment(id);
         }
         catch (Exception)
         {
@@ -107,14 +108,14 @@ public class PaymentController : ControllerBase
                 return BadRequest("Payment ID mismatch");
             }
 
-            var paymentToUpdate = await _paymentRepository.GetPayment(id);
+            var paymentToUpdate = await _paymentServices.GetPayment(id);
 
             if(paymentToUpdate == null)
             {
                 return NotFound($"Payment with Id = {id} not found");
             }
 
-            return await _paymentRepository.UpdatePayment(payment);
+            return await _paymentServices.UpdatePayment(payment);
         }
         catch (Exception)
         {

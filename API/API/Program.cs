@@ -4,6 +4,7 @@ using API.ItemServiceComponent.Repository;
 using API.OrdersComponent.Models;
 using API.OrdersComponent.Repository;
 using API.PaymentComponent.Repository;
+using API.PaymentComponent.Services;
 using API.UsersComponent.Models;
 using API.UsersComponent.Repository;
 using API.UsersComponent.Services;
@@ -41,6 +42,7 @@ builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
 builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 builder.Services.AddScoped<ICustomerServices, CustomerServices>();
 builder.Services.AddScoped<IStaffServices, StaffServices>();
+builder.Services.AddScoped<IPaymentServices, PaymentServices>();
 
 var app = builder.Build();
 
