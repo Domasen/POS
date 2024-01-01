@@ -2,6 +2,7 @@
 using API.ItemServiceComponent.Models;
 using API.OrdersComponent.Models;
 using API.PaymentComponent.Models;
+using API.ServicesComponent.Models;
 using API.UsersComponent.Models;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,6 +1,5 @@
-﻿namespace API.ItemServiceComponent.Models;
+﻿namespace API.ServicesComponent.Models;
 
-//Service  Appointment component  
 public class Service
 {
     public Guid Id { get; set; }
