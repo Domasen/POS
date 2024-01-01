@@ -1,8 +1,8 @@
-﻿using API.ItemServiceComponent.Models;
-using API.ItemServiceComponent.Repository;
+﻿using API.ServicesComponent.Models;
+using API.ServicesComponent.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.ItemServiceComponent.Controllers;
+namespace API.ServicesComponent.Controllers;
 // https://www.pragimtech.com/blog/blazor/delete-in-asp.net-core-rest-api/
 [ApiController]
 [Route("[controller]")]
@@ -10,12 +10,12 @@ namespace API.ItemServiceComponent.Controllers;
 public class ServiceController : ControllerBase
 {
     private readonly ILogger<ServiceController> _logger;
-    private readonly IServiceRepository _serviceRepository;
+    private readonly IServiceServices _serviceServices;
     
-    public ServiceController(ILogger<ServiceController> logger, IServiceRepository serviceRepository)
+    public ServiceController(ILogger<ServiceController> logger, IServiceServices serviceServices)
     {
         _logger = logger;
-        _serviceRepository = serviceRepository;
+        _serviceServices = serviceServices;
     }
     [HttpPost("Service")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -29,7 +29,7 @@ public class ServiceController : ControllerBase
                 return BadRequest();
             }
 
-            var createdService = await _serviceRepository.AddService(service);
+            var createdService = await _serviceServices.AddService(service);
 
             return CreatedAtAction(nameof(GetServices), new { id = createdService.Id }, createdService);
         }
@@ -44,7 +44,7 @@ public class ServiceController : ControllerBase
     {
         try
         {
-            return Ok(await _serviceRepository.GetServices());
+            return Ok(await _serviceServices.GetServices());
         }
         catch (Exception)
         {
@@ -53,18 +53,18 @@ public class ServiceController : ControllerBase
         }
     }
     
-    [HttpGet("Service/{Id}")]
+    [HttpGet("Service/{id}")]
     public async Task<ActionResult<Service>> GetService(Guid id)
     {
         try
         {
-            var result = await _serviceRepository.GetService(id);
-
+            var result = await _serviceServices.GetService(id);
+    
             if (result == null)
             {
                 return NotFound($"Service with Id = {id} not found");
             }
-
+    
             return result;
         }
         catch (Exception)
@@ -79,14 +79,14 @@ public class ServiceController : ControllerBase
     {
         try
         {
-            var serviceToDelete = await _serviceRepository.GetService(id);
+            var serviceToDelete = await _serviceServices.GetService(id);
 
             if (serviceToDelete == null)
             {
                 return NotFound($"Service with Id = {id} not found");
             }
 
-            return await _serviceRepository.DeleteService(id);
+            return await _serviceServices.DeleteService(id);
         }
         catch (Exception)
         {
@@ -105,14 +105,14 @@ public class ServiceController : ControllerBase
                 return BadRequest("Service ID mismatch");
             }
 
-            var serviceToUpdate = await _serviceRepository.GetService(Id);
+            var serviceToUpdate = await _serviceServices.GetService(Id);
 
             if(serviceToUpdate == null)
             {
                 return NotFound($"Service with Id = {Id} not found");
             }
 
-            return await _serviceRepository.UpdateService(service);
+            return await _serviceServices.UpdateService(service);
         }
         catch (Exception)
         {

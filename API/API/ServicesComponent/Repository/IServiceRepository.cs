@@ -1,4 +1,4 @@
-﻿using API.ItemServiceComponent.Models;
+﻿using API.ServicesComponent.Models;
 
 namespace API.ItemServiceComponent.Repository;
 
