@@ -1,5 +1,6 @@
 ﻿using API.DiscountLoyaltyComponent.Models;
 using API.DiscountLoyaltyComponent.Repository;
+using API.DiscountLoyaltyComponent.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.DiscountLoyaltyComponent.Controllers;
@@ -10,13 +11,13 @@ namespace API.DiscountLoyaltyComponent.Controllers;
 public class DiscountLoyaltyProgramController : ControllerBase
 {
     private readonly ILogger<DiscountLoyaltyProgramController> _logger;
-    private readonly IDiscountRepository _discountRepository;
+    private readonly IDiscountServices _discountServices;
     private readonly ILoyaltyProgramRepository _loyaltyProgramRepository;
     
-    public DiscountLoyaltyProgramController(ILogger<DiscountLoyaltyProgramController> logger, IDiscountRepository discountRepository, ILoyaltyProgramRepository loyaltyProgramRepository)
+    public DiscountLoyaltyProgramController(ILogger<DiscountLoyaltyProgramController> logger, IDiscountServices discountServices, ILoyaltyProgramRepository loyaltyProgramRepository)
     {
         _logger = logger;
-        _discountRepository = discountRepository;
+        _discountServices = discountServices;
         _loyaltyProgramRepository = loyaltyProgramRepository;
     }
     
@@ -137,7 +138,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
                 return BadRequest();
             }
 
-            var createdDiscount = await _discountRepository.AddDiscount(discount);
+            var createdDiscount = await _discountServices.AddDiscount(discount);
 
             return CreatedAtAction(nameof(GetDiscount), new { id = createdDiscount.Id }, createdDiscount);
         }
@@ -152,7 +153,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
     {
         try
         {
-            return Ok(await _discountRepository.GetDiscount());
+            return Ok(await _discountServices.GetDiscounts());
         }
         catch (Exception)
         {
@@ -166,7 +167,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
     {
         try
         {
-            var result = await _discountRepository.GetDiscount(id);
+            var result = await _discountServices.GetDiscount(id);
 
             if (result == null)
             {
@@ -187,14 +188,14 @@ public class DiscountLoyaltyProgramController : ControllerBase
     {
         try
         {
-            var discountToDelete = await _discountRepository.GetDiscount(id);
+            var discountToDelete = await _discountServices.GetDiscount(id);
 
             if (discountToDelete == null)
             {
                 return NotFound($"Discount with Id = {id} not found");
             }
 
-            return await _discountRepository.DeleteDiscount(id);
+            return await _discountServices.DeleteDiscount(id);
         }
         catch (Exception)
         {
@@ -213,14 +214,14 @@ public class DiscountLoyaltyProgramController : ControllerBase
                 return BadRequest("Discount ID mismatch");
             }
 
-            var discountToUpdate = await _discountRepository.GetDiscount(id);
+            var discountToUpdate = await _discountServices.GetDiscount(id);
 
             if(discountToUpdate == null)
             {
                 return NotFound($"Discount with Id = {id} not found");
             }
 
-            return await _discountRepository.UpdateDiscount(discount);
+            return await _discountServices.UpdateDiscount(discount);
         }
         catch (Exception)
         {

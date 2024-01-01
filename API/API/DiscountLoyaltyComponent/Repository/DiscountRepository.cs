@@ -40,7 +40,7 @@ public class DiscountRepository : IDiscountRepository
         return await _context.Discounts.FirstOrDefaultAsync(d => d.Id == discountId);
     }
 
-    public async Task<IEnumerable<Discount>> GetDiscount()
+    public async Task<IEnumerable<Discount>> GetDiscounts()
     {
         return await _context.Discounts.ToListAsync();
     }

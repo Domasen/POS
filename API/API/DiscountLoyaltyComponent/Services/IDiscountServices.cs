@@ -1,8 +1,8 @@
 ﻿using API.DiscountLoyaltyComponent.Models;
 
-namespace API.DiscountLoyaltyComponent.Repository;
+namespace API.DiscountLoyaltyComponent.Services;
 
-public interface IDiscountRepository
+public interface IDiscountServices
 {
     Task<Discount> AddDiscount(Discount discount);
     Task<Discount?> DeleteDiscount(Guid discountId);
