@@ -1,5 +1,6 @@
 ﻿using API.OrdersComponent.Models;
-using API.OrdersComponent.Repository;
+using API.OrdersComponent.Services;
+using API.OrdersComponent.Sevices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.OrdersComponent.Controllers;
@@ -7,13 +8,13 @@ namespace API.OrdersComponent.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly ILogger<OrdersController> _logger;
-    private readonly IOrderRepository _orderRepository;
-    private readonly IOrderItemRepository _orderItemRepository;
-    public OrdersController(ILogger<OrdersController> logger, IOrderRepository orderRepository, IOrderItemRepository orderItemRepository)
+    private readonly IOrderServices _orderServices;
+    private readonly IOrderItemServices _orderItemServices;
+    public OrdersController(ILogger<OrdersController> logger, IOrderServices orderServices, IOrderItemServices orderItemServices)
     {
         _logger = logger;
-        _orderRepository = orderRepository;
-        _orderItemRepository = orderItemRepository;
+        _orderServices = orderServices;
+        _orderItemServices = orderItemServices;
     }
     
     [HttpPost("Order")]
@@ -27,7 +28,7 @@ public class OrdersController : ControllerBase
                 return BadRequest();
             }
 
-            var createdOrder = await _orderRepository.AddOrder(order);
+            var createdOrder = await _orderServices.AddOrder(order);
 
             return CreatedAtAction(nameof(GetOrder), new { id = createdOrder.Id }, createdOrder);
         }
@@ -42,7 +43,7 @@ public class OrdersController : ControllerBase
     {
         try
         {
-            return Ok(await _orderRepository.GetOrders());
+            return Ok(await _orderServices.GetOrders());
         }
         catch (Exception)
         {
@@ -56,7 +57,7 @@ public class OrdersController : ControllerBase
     {
         try
         {
-            var result = await _orderRepository.GetOrder(id);
+            var result = await _orderServices.GetOrder(id);
 
             if (result == null)
             {
@@ -77,14 +78,14 @@ public class OrdersController : ControllerBase
     {
         try
         {
-            var orderToDelete = await _orderRepository.GetOrder(id);
+            var orderToDelete = await _orderServices.GetOrder(id);
 
             if (orderToDelete == null)
             {
                 return NotFound($"Order with Id = {id} not found");
             }
 
-            return await _orderRepository.DeleteOrder(id);
+            return await _orderServices.DeleteOrder(id);
         }
         catch (Exception)
         {
@@ -104,14 +105,14 @@ public class OrdersController : ControllerBase
                 return BadRequest("Order ID mismatch");
             }
 
-            var orderToUpdate = await _orderRepository.GetOrder(id);
+            var orderToUpdate = await _orderServices.GetOrder(id);
 
             if(orderToUpdate == null)
             {
                 return NotFound($"Order with Id = {id} not found");
             }
                 //daryti servisa kuris zino apie repozitorija controleri nubutu repositorijos
-            return await _orderRepository.UpdateOrder(order);
+            return await _orderServices.UpdateOrder(order);
         }
         catch (Exception)
         {
@@ -133,7 +134,7 @@ public class OrdersController : ControllerBase
                 return BadRequest();
             }
 
-            var createdOrderItem = await _orderItemRepository.AddOrderItem(orderItem);
+            var createdOrderItem = await _orderItemServices.AddOrderItem(orderItem);
 
             return CreatedAtAction(nameof(GetOrderItem), new { id = createdOrderItem.Id }, createdOrderItem);
         }
@@ -148,7 +149,7 @@ public class OrdersController : ControllerBase
     {
         try
         {
-            return Ok(await _orderItemRepository.GetOrderItems());
+            return Ok(await _orderItemServices.GetOrderItems());
         }
         catch (Exception)
         {
@@ -162,7 +163,7 @@ public class OrdersController : ControllerBase
     {
         try
         {
-            var result = await _orderItemRepository.GetOrderItem(id);
+            var result = await _orderItemServices.GetOrderItem(id);
 
             if (result == null)
             {
@@ -183,14 +184,14 @@ public class OrdersController : ControllerBase
     {
         try
         {
-            var orderItemToDelete = await _orderItemRepository.GetOrderItem(id);
+            var orderItemToDelete = await _orderItemServices.GetOrderItem(id);
 
             if (orderItemToDelete == null)
             {
                 return NotFound($"OrderItem with Id = {id} not found");
             }
 
-            return await _orderItemRepository.DeleteOrderItem(id);
+            return await _orderItemServices.DeleteOrderItem(id);
         }
         catch (Exception)
         {
@@ -209,14 +210,14 @@ public class OrdersController : ControllerBase
                 return BadRequest("OrderItem ID mismatch");
             }
 
-            var orderItemToUpdate = await _orderItemRepository.GetOrderItem(id);
+            var orderItemToUpdate = await _orderItemServices.GetOrderItem(id);
 
             if(orderItemToUpdate == null)
             {
                 return NotFound($"OrderItem with Id = {id} not found");
             }
 
-            return await _orderItemRepository.UpdateOrderItem(orderItem);
+            return await _orderItemServices.UpdateOrderItem(orderItem);
         }
         catch (Exception)
         {
