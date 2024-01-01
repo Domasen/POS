@@ -1,5 +1,6 @@
 ﻿namespace API.OrdersComponent.Models;
 
+//i atskira faila enum
 public enum OrderItemType
 {
     Item,

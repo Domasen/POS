@@ -25,6 +25,7 @@ public class ItemRepository : IItemRepository
     {
         var result = await _context.Items.FirstOrDefaultAsync(i => i.Id == itemId);
 
+        //tikrinti result == null
         if (result != null)
         {
             _context.Items.Remove(result);
@@ -46,7 +47,7 @@ public class ItemRepository : IItemRepository
     }
     
     
-    
+    //assembleri  mapperi "object mapper"
     public async Task<Item?> UpdateItem(Item item)
     {
         var result = await _context.Items.FirstOrDefaultAsync(i => i.Id == item.Id);
