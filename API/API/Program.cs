@@ -46,6 +46,7 @@ builder.Services.AddScoped<IStaffServices, StaffServices>();
 builder.Services.AddScoped<IPaymentServices, PaymentServices>();
 builder.Services.AddScoped<IPaymentMethodServices, PaymentMethodServices>();
 builder.Services.AddScoped<IDiscountServices, DiscountServices>();
+builder.Services.AddScoped<ILoyaltyProgramServices, LoyaltyProgramServices>();
 
 var app = builder.Build();
 

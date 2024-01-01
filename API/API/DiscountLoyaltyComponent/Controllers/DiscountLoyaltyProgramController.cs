@@ -12,13 +12,13 @@ public class DiscountLoyaltyProgramController : ControllerBase
 {
     private readonly ILogger<DiscountLoyaltyProgramController> _logger;
     private readonly IDiscountServices _discountServices;
-    private readonly ILoyaltyProgramRepository _loyaltyProgramRepository;
+    private readonly ILoyaltyProgramServices _loyaltyProgramServices;
     
-    public DiscountLoyaltyProgramController(ILogger<DiscountLoyaltyProgramController> logger, IDiscountServices discountServices, ILoyaltyProgramRepository loyaltyProgramRepository)
+    public DiscountLoyaltyProgramController(ILogger<DiscountLoyaltyProgramController> logger, IDiscountServices discountServices, ILoyaltyProgramServices loyaltyProgramServices)
     {
         _logger = logger;
         _discountServices = discountServices;
-        _loyaltyProgramRepository = loyaltyProgramRepository;
+        _loyaltyProgramServices = loyaltyProgramServices;
     }
     
     [HttpPost("LoyaltyProgram")]
@@ -32,7 +32,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
                 return BadRequest();
             }
 
-            var createdLoyaltyProgram = await _loyaltyProgramRepository.AddLoyaltyProgram(loyaltyProgram);
+            var createdLoyaltyProgram = await _loyaltyProgramServices.AddLoyaltyProgram(loyaltyProgram);
 
             return CreatedAtAction(nameof(GetLoyaltyProgram), new { id = createdLoyaltyProgram.Id }, createdLoyaltyProgram);
         }
@@ -47,7 +47,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
     {
         try
         {
-            return Ok(await _loyaltyProgramRepository.GetLoyaltyProgram());
+            return Ok(await _loyaltyProgramServices.GetLoyaltyPrograms());
         }
         catch (Exception)
         {
@@ -63,7 +63,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
     {
         try
         {
-            var result = await _loyaltyProgramRepository.GetLoyaltyProgram(id);
+            var result = await _loyaltyProgramServices.GetLoyaltyProgram(id);
 
             if (result == null)
             {
@@ -85,14 +85,14 @@ public class DiscountLoyaltyProgramController : ControllerBase
     {
         try
         {
-            var loyaltyProgramToDelete = await _loyaltyProgramRepository.GetLoyaltyProgram(id);
+            var loyaltyProgramToDelete = await _loyaltyProgramServices.GetLoyaltyProgram(id);
 
             if (loyaltyProgramToDelete == null)
             {
                 return NotFound($"LoyaltyProgram with Id = {id} not found");
             }
 
-            return await _loyaltyProgramRepository.DeleteLoyaltyProgram(id);
+            return await _loyaltyProgramServices.DeleteLoyaltyProgram(id);
         }
         catch (Exception)
         {
@@ -111,14 +111,14 @@ public class DiscountLoyaltyProgramController : ControllerBase
                 return BadRequest("LoyaltyProgram ID mismatch");
             }
 
-            var loyaltyProgramToUpdate = await _loyaltyProgramRepository.GetLoyaltyProgram(id);
+            var loyaltyProgramToUpdate = await _loyaltyProgramServices.GetLoyaltyProgram(id);
 
             if(loyaltyProgramToUpdate == null)
             {
                 return NotFound($"LoyaltyProgram with Id = {id} not found");
             }
 
-            return await _loyaltyProgramRepository.UpdateLoyaltyProgram(loyaltyProgram);
+            return await _loyaltyProgramServices.UpdateLoyaltyProgram(loyaltyProgram);
         }
         catch (Exception)
         {

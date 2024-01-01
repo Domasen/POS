@@ -1,8 +1,8 @@
 ﻿using API.DiscountLoyaltyComponent.Models;
 
-namespace API.DiscountLoyaltyComponent.Repository;
+namespace API.DiscountLoyaltyComponent.Services;
 
-public interface ILoyaltyProgramRepository
+public interface ILoyaltyProgramServices
 {
     Task<LoyaltyProgram> AddLoyaltyProgram(LoyaltyProgram loyaltyProgram);
     Task<LoyaltyProgram?> DeleteLoyaltyProgram(Guid loyaltyProgramId);
