@@ -13,12 +13,12 @@ public class PaymentController : ControllerBase
 {
     private readonly ILogger<PaymentController> _logger;
     private readonly IPaymentServices _paymentServices;
-    private readonly IPaymentMethodRepository _paymentMethodRepository;
-    public PaymentController(ILogger<PaymentController> logger, IPaymentServices paymentServices, IPaymentMethodRepository paymentMethodRepository)
+    private readonly IPaymentMethodServices _paymentMethodServices;
+    public PaymentController(ILogger<PaymentController> logger, IPaymentServices paymentServices, IPaymentMethodServices paymentMethodServices)
     {
         _logger = logger;
         _paymentServices = paymentServices;
-        _paymentMethodRepository = paymentMethodRepository;
+        _paymentMethodServices = paymentMethodServices;
     }
     
     [HttpPost("Payment")]
@@ -136,7 +136,7 @@ public class PaymentController : ControllerBase
                 return BadRequest();
             }
 
-            var createdPaymentMethod = await _paymentMethodRepository.AddPaymentMethod(paymentMethod);
+            var createdPaymentMethod = await _paymentMethodServices.AddPaymentMethod(paymentMethod);
 
             return CreatedAtAction(nameof(GetPaymentMethod), new { id = createdPaymentMethod.Id }, createdPaymentMethod);
         }
@@ -151,7 +151,7 @@ public class PaymentController : ControllerBase
     {
         try
         {
-            return Ok(await _paymentMethodRepository.GetPaymentMethods());
+            return Ok(await _paymentMethodServices.GetPaymentMethods());
         }
         catch (Exception)
         {
@@ -165,7 +165,7 @@ public class PaymentController : ControllerBase
     {
         try
         {
-            var result = await _paymentMethodRepository.GetPaymentMethod(id);
+            var result = await _paymentMethodServices.GetPaymentMethod(id);
 
             if (result == null)
             {
@@ -186,14 +186,14 @@ public class PaymentController : ControllerBase
     {
         try
         {
-            var paymentMethodToDelete = await _paymentMethodRepository.GetPaymentMethod(id);
+            var paymentMethodToDelete = await _paymentMethodServices.GetPaymentMethod(id);
 
             if (paymentMethodToDelete == null)
             {
                 return NotFound($"Payment Method with Id = {id} not found");
             }
 
-            return await _paymentMethodRepository.DeletePaymentMethod(id);
+            return await _paymentMethodServices.DeletePaymentMethod(id);
         }
         catch (Exception)
         {
@@ -212,14 +212,14 @@ public class PaymentController : ControllerBase
                 return BadRequest("Payment Method  ID mismatch");
             }
 
-            var paymentMethodToUpdate = await _paymentMethodRepository.GetPaymentMethod(id);
+            var paymentMethodToUpdate = await _paymentMethodServices.GetPaymentMethod(id);
 
             if(paymentMethodToUpdate == null)
             {
                 return NotFound($"Payment Method with Id = {id} not found");
             }
 
-            return await _paymentMethodRepository.UpdatePaymentMethod(paymentMethod);
+            return await _paymentMethodServices.UpdatePaymentMethod(paymentMethod);
         }
         catch (Exception)
         {
