@@ -6,6 +6,7 @@ using API.OrdersComponent.Repository;
 using API.PaymentComponent.Repository;
 using API.UsersComponent.Models;
 using API.UsersComponent.Repository;
+using API.UsersComponent.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +39,8 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
 builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<ICustomerServices, CustomerServices>();
+builder.Services.AddScoped<IStaffServices, StaffServices>();
 
 var app = builder.Build();
 
