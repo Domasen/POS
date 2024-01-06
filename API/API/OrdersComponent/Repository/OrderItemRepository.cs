@@ -59,6 +59,7 @@ public class OrderItemRepository : IOrderItemRepository
             result.Type = orderItem.Type;
             result.Quantity = orderItem.Quantity;
             result.Subtotal = orderItem.Subtotal;
+            result.TaxId = result.TaxId;
 
             await _context.SaveChangesAsync();
 

@@ -1,20 +1,31 @@
-﻿using API.OrdersComponent.Models;
+﻿using API.ItemServiceComponent.Services;
+using API.Migrations;
+using API.OrdersComponent.Models;
 using API.OrdersComponent.Repository;
+using API.TaxComponent.Models;
+using API.TaxComponent.Services;
+using Tax = API.TaxComponent.Models.Tax;
 
 namespace API.OrdersComponent.Services;
 
 public class OrderItemServices : IOrderItemServices
 {
     private readonly IOrderItemRepository _orderItemRepository;
-    public OrderItemServices(IOrderItemRepository orderItemRepository)
+    private readonly IItemServices _itemServices;
+    private readonly ITaxServices _taxServices;
+    public OrderItemServices(IOrderItemRepository orderItemRepository, IItemServices itemServices, ITaxServices taxServices)
     {
         _orderItemRepository = orderItemRepository;
+        _itemServices = itemServices;
+        _taxServices = taxServices;
     }
     public async Task<OrderItem> AddOrderItem(OrderItem orderItem)
     {
         switch (orderItem.Type)
         {
             case OrderItemType.Item:
+                orderItem.UnitPrice = (decimal)await _itemServices.GetItemPrice(orderItem.ItemId);
+                orderItem.Subtotal = (decimal)await CalculateItemPrice(orderItem.Quantity, orderItem.UnitPrice, orderItem.TaxId);
                 break;
             case OrderItemType.Service:
                 break;
@@ -45,8 +56,23 @@ public class OrderItemServices : IOrderItemServices
         return await _orderItemRepository.UpdateOrderItem(orderItem);
     }
 
-    public Decimal CalculateItemPrice(Decimal quantity, Guid itemId)
+    private async Task<Decimal?> CalculateItemPrice(Decimal quantity, Decimal unitPrice, Guid taxId)
     {
-        return (decimal)0.1;
+        Tax? tax = await _taxServices.GetTax(taxId);
+
+        if (tax == null)
+        {
+            return null;
+        }
+
+        switch (tax.Category)
+        {
+            case TaxCategory.Percent:
+                return (quantity * unitPrice) * (1 + ((decimal)tax.Value / 100));
+            case TaxCategory.Flat:
+                return (quantity * unitPrice) + tax.Value;
+        }
+
+        return null;
     }
 }
