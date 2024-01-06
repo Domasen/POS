@@ -36,4 +36,16 @@ public class ItemServices : IItemServices
     {
         return await _itemRepository.UpdateItem(item);
     }
+
+    public async Task<decimal?> GetItemPrice(Guid itemId)
+    {
+        var item = await GetItem(itemId);
+
+        if (item == null)
+        {
+            return null;
+        }
+
+        return item.Price;
+    }
 }
