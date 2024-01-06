@@ -97,21 +97,21 @@ public class ServiceController : ControllerBase
         }
     }
     
-    [HttpPut("Service/{Id}")]
-    public async Task<ActionResult<Service>> UpdateService(Guid Id, Service service)
+    [HttpPut("Service/{id}")]
+    public async Task<ActionResult<Service>> UpdateService(Guid id, Service service)
     {
         try
         {
-            if(Id != service.Id)
+            if(id != service.Id)
             {
                 return BadRequest("Service ID mismatch");
             }
 
-            var serviceToUpdate = await _serviceServices.GetService(Id);
+            var serviceToUpdate = await _serviceServices.GetService(id);
 
             if(serviceToUpdate == null)
             {
-                return NotFound($"Service with Id = {Id} not found");
+                return NotFound($"Service with Id = {id} not found");
             }
 
             return await _serviceServices.UpdateService(service);
