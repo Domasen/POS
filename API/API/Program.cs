@@ -44,6 +44,7 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
 builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<ICustomerServices, CustomerServices>();
 builder.Services.AddScoped<IStaffServices, StaffServices>();
 builder.Services.AddScoped<IPaymentServices, PaymentServices>();
@@ -53,6 +54,7 @@ builder.Services.AddScoped<ILoyaltyProgramServices, LoyaltyProgramServices>();
 builder.Services.AddScoped<IServiceServices, ServiceServices>();
 builder.Services.AddScoped<IOrderServices, OrderServices>();
 builder.Services.AddScoped<IOrderItemServices, OrderItemServices>();
+builder.Services.AddScoped<IAppointmentServices, AppointmentServices>();
 
 var app = builder.Build();
 
