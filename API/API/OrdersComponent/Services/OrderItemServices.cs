@@ -60,13 +60,13 @@ public class OrderItemServices : IOrderItemServices
         return await _orderItemRepository.UpdateOrderItem(orderItem);
     }
 
-    private async Task<Decimal?> CalculateItemPrice(Decimal quantity, Decimal unitPrice, Guid taxId)
+    private async Task<Decimal?> CalculateItemPrice(Decimal quantity, Decimal? unitPrice, Guid taxId)
     {
         Tax? tax = await _taxServices.GetTax(taxId);
 
-        if (tax == null)
+        if (tax == null || unitPrice == null)
         {
-            return null;
+            return 0;
         }
 
         switch (tax.Category)
@@ -77,7 +77,7 @@ public class OrderItemServices : IOrderItemServices
                 return (quantity * unitPrice) + tax.Value;
         }
 
-        return null;
+        return 0;
     }
     
     public async Task<List<OrderItem>> GetOrderItemsByOrderId(Guid orderId)

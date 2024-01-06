@@ -1,4 +1,6 @@
-﻿using API.ItemServiceComponent.Models;
+﻿using API.DiscountLoyaltyComponent.Models;
+using API.DiscountLoyaltyComponent.Services;
+using API.ItemServiceComponent.Models;
 using API.ItemServiceComponent.Repository;
 
 namespace API.ItemServiceComponent.Services;
@@ -6,9 +8,11 @@ namespace API.ItemServiceComponent.Services;
 public class ItemServices : IItemServices
 {
     private readonly IItemRepository _itemRepository;
+    private readonly IDiscountServices _discountServices;
 
-    public ItemServices(IItemRepository itemRepository)
+    public ItemServices(IItemRepository itemRepository, IDiscountServices discountServices)
     {
+        _discountServices = discountServices;
         _itemRepository = itemRepository;
     }
     
@@ -39,11 +43,18 @@ public class ItemServices : IItemServices
 
     public async Task<decimal?> GetItemPrice(Guid itemId)
     {
-        var item = await GetItem(itemId);
-
+        Item? item = await GetItem(itemId);
+        
         if (item == null)
         {
-            return null;
+            return 0;
+        }
+        
+        Discount? discount = await _discountServices.GetDiscount((Guid)item.DiscountId);
+
+        if (discount.ValidUntil >= DateTime.Today && discount != null) 
+        {
+            return item.Price * (1 - ((decimal)discount.DiscountPercentage / 100));
         }
 
         return item.Price;
