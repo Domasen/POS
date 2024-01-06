@@ -9,6 +9,8 @@ using API.OrdersComponent.Sevices;
 using API.PaymentComponent.Repository;
 using API.PaymentComponent.Services;
 using API.ServicesComponent.Services;
+using API.TaxComponent.Repository;
+using API.TaxComponent.Services;
 using API.UsersComponent.Models;
 using API.UsersComponent.Repository;
 using API.UsersComponent.Services;
@@ -53,6 +55,8 @@ builder.Services.AddScoped<ILoyaltyProgramServices, LoyaltyProgramServices>();
 builder.Services.AddScoped<IServiceServices, ServiceServices>();
 builder.Services.AddScoped<IOrderServices, OrderServices>();
 builder.Services.AddScoped<IOrderItemServices, OrderItemServices>();
+builder.Services.AddScoped<ITaxRepository, TaxRepository>();
+builder.Services.AddScoped<ITaxServices, TaxServices>();
 
 var app = builder.Build();
 

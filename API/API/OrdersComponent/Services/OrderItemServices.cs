@@ -12,6 +12,16 @@ public class OrderItemServices : IOrderItemServices
     }
     public async Task<OrderItem> AddOrderItem(OrderItem orderItem)
     {
+        switch (orderItem.Type)
+        {
+            case OrderItemType.Item:
+                break;
+            case OrderItemType.Service:
+                break;
+            case OrderItemType.Appointment:
+                break;
+        }
+
         return await _orderItemRepository.AddOrderItem(orderItem);
     }
 
@@ -33,5 +43,10 @@ public class OrderItemServices : IOrderItemServices
     public async Task<OrderItem?> UpdateOrderItem(OrderItem orderItem)
     {
         return await _orderItemRepository.UpdateOrderItem(orderItem);
+    }
+
+    public Decimal CalculateItemPrice(Decimal quantity, Guid itemId)
+    {
+        return (decimal)0.1;
     }
 }

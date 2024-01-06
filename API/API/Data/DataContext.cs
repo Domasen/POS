@@ -3,6 +3,7 @@ using API.ItemServiceComponent.Models;
 using API.OrdersComponent.Models;
 using API.PaymentComponent.Models;
 using API.ServicesComponent.Models;
+using API.TaxComponent.Models;
 using API.UsersComponent.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,4 +28,5 @@ public class DataContext : DbContext
     public DbSet<Payment> Payments => Set<Payment>();
     public DbSet<PaymentMethod> PaymentMethods => Set<PaymentMethod>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+    public DbSet<Tax> Taxes => Set<Tax>();
 }
