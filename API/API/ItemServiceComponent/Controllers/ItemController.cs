@@ -1,5 +1,6 @@
 ﻿using API.ItemServiceComponent.Models;
 using API.ItemServiceComponent.Repository;
+using API.ItemServiceComponent.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.ItemServiceComponent.Controllers;
@@ -10,12 +11,12 @@ namespace API.ItemServiceComponent.Controllers;
 public class ItemController : ControllerBase
 {
     private readonly ILogger<ItemController> _logger;
-    private readonly IItemRepository _itemRepository;
+    private readonly IItemServices _itemServices;
     
-    public ItemController(ILogger<ItemController> logger, IItemRepository itemRepository)
+    public ItemController(ILogger<ItemController> logger, IItemServices itemServices)
     {
         _logger = logger;
-        _itemRepository = itemRepository;
+        _itemServices = itemServices;
     }
     [HttpPost("Item")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -28,7 +29,7 @@ public class ItemController : ControllerBase
                 return BadRequest();
             }
 
-            var createdItem = await _itemRepository.AddItem(item);
+            var createdItem = await _itemServices.AddItem(item);
 
             return CreatedAtAction(nameof(GetItems), new { id = createdItem.Id }, createdItem);
         }
@@ -43,7 +44,7 @@ public class ItemController : ControllerBase
     {
         try
         {
-            return Ok(await _itemRepository.GetItems());
+            return Ok(await _itemServices.GetItems());
         }
         catch (Exception)
         {
@@ -57,7 +58,7 @@ public class ItemController : ControllerBase
     {
         try
         {
-            var result = await _itemRepository.GetItem(id);
+            var result = await _itemServices.GetItem(id);
 
             if (result == null)
             {
@@ -78,14 +79,14 @@ public class ItemController : ControllerBase
     {
         try
         {
-            var itemToDelete = await _itemRepository.GetItem(id);
+            var itemToDelete = await _itemServices.GetItem(id);
 
             if (itemToDelete == null)
             {
                 return NotFound($"Item with Id = {id} not found");
             }
 
-            return await _itemRepository.DeleteItem(id);
+            return await _itemServices.DeleteItem(id);
         }
         catch (Exception)
         {
@@ -104,14 +105,14 @@ public class ItemController : ControllerBase
                 return BadRequest("Item ID mismatch");
             }
 
-            var itemToUpdate = await _itemRepository.GetItem(id);
+            var itemToUpdate = await _itemServices.GetItem(id);
 
             if(itemToUpdate == null)
             {
                 return NotFound($"Item with Id = {id} not found");
             }
 
-            return await _itemRepository.UpdateItem(item);
+            return await _itemServices.UpdateItem(item);
         }
         catch (Exception)
         {
