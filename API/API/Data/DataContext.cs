@@ -29,4 +29,5 @@ public class DataContext : DbContext
     public DbSet<PaymentMethod> PaymentMethods => Set<PaymentMethod>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<Tax> Taxes => Set<Tax>();
+    public DbSet<Appointment> Appointments => Set<Appointment>();
 }
