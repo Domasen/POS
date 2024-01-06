@@ -11,10 +11,12 @@ public class OrderServices : IOrderServices
 {
     private readonly IOrderRepository _orderRepository;
     private readonly DataContext _context;
-    public OrderServices(IOrderRepository orderRepository, DataContext context)
+    private readonly IOrderItemServices _orderItemServices;
+    public OrderServices(IOrderRepository orderRepository, DataContext context, IOrderItemServices orderItemServices)
     {
         _orderRepository = orderRepository;
         _context = context;
+        _orderItemServices = orderItemServices;
     }
     public async Task<Order> AddOrder(Order order)
     {
@@ -26,12 +28,6 @@ public class OrderServices : IOrderServices
         return await _orderRepository.DeleteOrder(orderId);
     }
     
-    // Gauti susijusius OrderItem'us pagal Order ID
-    public async Task<List<OrderItem>> GetOrderItemsByOrderId(Guid orderId)
-    {
-        return await _context.OrderItems.Where(oi => oi.OrderId == orderId).ToListAsync();
-    }
-    
     public async Task<Order?> GetOrder(Guid orderId)
     {
         var order = await _orderRepository.GetOrder(orderId);
@@ -40,15 +36,16 @@ public class OrderServices : IOrderServices
     }
     
     //suskaičiuoti galutinę sumą 
-    public async Task<decimal?> GetOrderTotalAmount(Guid orderId)
+    private async Task<decimal?> GetOrderTotalAmount(Guid orderId)
     {
-        var orderItemsLists =  await GetOrderItemsByOrderId(orderId);
+        var orderItemsLists =  await _orderItemServices.GetOrderItemsByOrderId(orderId);
         decimal totalAmount = 0;
         totalAmount = orderItemsLists.Sum(oi => oi.Subtotal);
         return totalAmount;
     }
+    
     //gauna visus orderius su galutinėmis sumomis
-    public async Task<IEnumerable<Order>> GetOrdersWithTotalAmount()
+    private async Task<IEnumerable<Order>> GetOrdersWithTotalAmount()
     {
         var orders = await _orderRepository.GetOrders();
         foreach (var order in orders)

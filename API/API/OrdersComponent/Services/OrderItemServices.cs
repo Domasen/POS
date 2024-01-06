@@ -1,9 +1,11 @@
-﻿using API.ItemServiceComponent.Services;
+﻿using API.Data;
+using API.ItemServiceComponent.Services;
 using API.Migrations;
 using API.OrdersComponent.Models;
 using API.OrdersComponent.Repository;
 using API.TaxComponent.Models;
 using API.TaxComponent.Services;
+using Microsoft.EntityFrameworkCore;
 using Tax = API.TaxComponent.Models.Tax;
 
 namespace API.OrdersComponent.Services;
@@ -13,11 +15,13 @@ public class OrderItemServices : IOrderItemServices
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly IItemServices _itemServices;
     private readonly ITaxServices _taxServices;
-    public OrderItemServices(IOrderItemRepository orderItemRepository, IItemServices itemServices, ITaxServices taxServices)
+    private readonly DataContext _context;
+    public OrderItemServices(IOrderItemRepository orderItemRepository, IItemServices itemServices, ITaxServices taxServices, DataContext context)
     {
         _orderItemRepository = orderItemRepository;
         _itemServices = itemServices;
         _taxServices = taxServices;
+        _context = context;
     }
     public async Task<OrderItem> AddOrderItem(OrderItem orderItem)
     {
@@ -74,5 +78,10 @@ public class OrderItemServices : IOrderItemServices
         }
 
         return null;
+    }
+    
+    public async Task<List<OrderItem>> GetOrderItemsByOrderId(Guid orderId)
+    {
+        return await _context.OrderItems.Where(oi => oi.OrderId == orderId).ToListAsync();
     }
 }
