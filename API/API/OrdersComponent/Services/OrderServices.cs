@@ -32,6 +32,7 @@ public class OrderServices : IOrderServices
     {
         var order = await _orderRepository.GetOrder(orderId);
         order.TotalAmount = (decimal)await GetOrderTotalAmount(orderId);
+        //order.TotalAmount += order.Tip;
         return order;
     }
     
@@ -39,9 +40,10 @@ public class OrderServices : IOrderServices
     private async Task<decimal?> GetOrderTotalAmount(Guid orderId)
     {
         var orderItemsLists =  await _orderItemServices.GetOrderItemsByOrderId(orderId);
+        Order order = await _orderRepository.GetOrder(orderId);
         decimal totalAmount = 0;
         totalAmount = orderItemsLists.Sum(oi => oi.Subtotal);
-        return totalAmount;
+        return totalAmount + order.Tip;
     }
     
     //gauna visus orderius su galutinėmis sumomis
