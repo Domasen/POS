@@ -9,5 +9,5 @@ public interface IItemServices
     Task<Item?> GetItem(Guid itemId);
     Task<IEnumerable<Item>> GetItems();
     Task<Item?> UpdateItem (Item item);
-    Task<decimal?> GetItemPrice(Guid itemId);
+    Task<decimal> GetItemPrice(Guid itemId);
 }

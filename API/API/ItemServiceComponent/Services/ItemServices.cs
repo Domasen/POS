@@ -41,7 +41,7 @@ public class ItemServices : IItemServices
         return await _itemRepository.UpdateItem(item);
     }
 
-    public async Task<decimal?> GetItemPrice(Guid itemId)
+    public async Task<decimal> GetItemPrice(Guid itemId)
     {
         Item? item = await GetItem(itemId);
         
@@ -52,11 +52,16 @@ public class ItemServices : IItemServices
         
         Discount? discount = await _discountServices.GetDiscount((Guid)item.DiscountId);
 
-        if (discount.ValidUntil >= DateTime.Today && discount != null) 
+        if (discount == null)
+        {
+            return item.Price;
+        }
+
+        if (discount.ValidUntil >= DateTime.Today) 
         {
             return item.Price * (1 - ((decimal)discount.DiscountPercentage / 100));
         }
 
-        return item.Price;
+        return 0;
     }
 }
