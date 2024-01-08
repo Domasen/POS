@@ -66,7 +66,7 @@ public class OrderItemServices : IOrderItemServices
 
         if (tax == null || unitPrice == 0)
         {
-            return 0;
+            return unitPrice * quantity;
         }
 
         switch (tax.Category)
