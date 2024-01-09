@@ -29,6 +29,7 @@ public class OrderItemServices : IOrderItemServices
         {
             case OrderItemType.Item:
                 orderItem.UnitPrice = await _itemServices.GetItemPrice(orderItem.ItemId);
+                orderItem.DiscountAmountPerUnit = await _itemServices.GetItemDiscount(orderItem.ItemId);
                 orderItem.Subtotal = (decimal)await CalculateItemPrice(orderItem.Quantity, orderItem.UnitPrice, orderItem.TaxId);
                 break;
             case OrderItemType.Service:
@@ -84,4 +85,6 @@ public class OrderItemServices : IOrderItemServices
     {
         return await _context.OrderItems.Where(oi => oi.OrderId == orderId).ToListAsync();
     }
+    
+    
 }

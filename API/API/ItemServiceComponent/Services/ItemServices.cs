@@ -66,4 +66,28 @@ public class ItemServices : IItemServices
         //
         // return 0;
     }
+
+    public async Task<decimal> GetItemDiscount(Guid itemId)
+    {
+        Item? item = await GetItem(itemId);
+
+        if (item == null)
+        {
+            return 0;
+        }
+        
+        Discount? discount = await _discountServices.GetDiscount((Guid)item.DiscountId);
+        
+        if (discount == null)
+        {
+            return 0;
+        }
+        
+        if (discount.ValidUntil >= DateTime.Today) 
+        {
+            return item.Price - (item.Price * (1 - ((decimal)discount.DiscountPercentage / 100)));
+        }
+        
+        return 0;
+    }
 }
