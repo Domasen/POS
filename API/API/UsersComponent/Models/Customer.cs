@@ -1,6 +1,6 @@
 ﻿namespace API.UsersComponent.Models;
 
-public class Customer
+public class Customer 
 {
     public Guid Id { get; set; }
     public Guid LoyaltyId { get; set; }
