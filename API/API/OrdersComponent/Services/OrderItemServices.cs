@@ -29,7 +29,10 @@ public class OrderItemServices : IOrderItemServices
         {
             case OrderItemType.Item:
                 orderItem.UnitPrice = await _itemServices.GetItemPrice(orderItem.ItemId);
-                orderItem.Subtotal = (decimal)await CalculateItemPrice(orderItem.Quantity, orderItem.UnitPrice, orderItem.TaxId);
+                orderItem.DiscountAmountPerUnit = await _itemServices.GetItemDiscount(orderItem.ItemId);
+                orderItem.TaxAmount = await CalculateTax(orderItem.TaxId, orderItem.UnitPrice,
+                    orderItem.DiscountAmountPerUnit, orderItem.Quantity);
+                orderItem.Subtotal = CalculateSubtotal(orderItem.Quantity, orderItem.UnitPrice, orderItem.DiscountAmountPerUnit, orderItem.TaxAmount);
                 break;
             case OrderItemType.Service:
                 break;
@@ -60,28 +63,33 @@ public class OrderItemServices : IOrderItemServices
         return await _orderItemRepository.UpdateOrderItem(orderItem);
     }
 
-    private async Task<Decimal?> CalculateItemPrice(Decimal quantity, decimal unitPrice, Guid taxId)
+    private Decimal CalculateSubtotal(Decimal quantity, Decimal unitPrice, Decimal discountAmountPerUnit, Decimal taxAmount)
     {
-        Tax? tax = await _taxServices.GetTax(taxId);
-
-        if (tax == null || unitPrice == 0)
-        {
-            return unitPrice * quantity;
-        }
-
-        switch (tax.Category)
-        {
-            case TaxCategory.Percent:
-                return (quantity * unitPrice) * (1 + ((decimal)tax.Value / 100));
-            case TaxCategory.Flat:
-                return (quantity * unitPrice) + tax.Value;
-        }
-
-        return 0;
+        return ((unitPrice - discountAmountPerUnit) * quantity) + taxAmount;
     }
     
     public async Task<List<OrderItem>> GetOrderItemsByOrderId(Guid orderId)
     {
         return await _context.OrderItems.Where(oi => oi.OrderId == orderId).ToListAsync();
+    }
+
+    private async Task<Decimal> CalculateTax(Guid taxId, Decimal unitPrice, Decimal discountAmountPerUnit, Decimal quantity)
+    {
+        Tax? tax = await _taxServices.GetTax(taxId);
+
+        if (tax == null || unitPrice == 0)
+        {
+            return 0;
+        }
+        
+        switch (tax.Category)
+        {
+            case TaxCategory.Percent:
+                return ((unitPrice - discountAmountPerUnit) * quantity) * (((decimal)tax.Value / 100));
+            case TaxCategory.Flat:
+                return tax.Value;
+        }
+
+        return 0;
     }
 }

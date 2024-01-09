@@ -10,4 +10,5 @@ public interface IItemServices
     Task<IEnumerable<Item>> GetItems();
     Task<Item?> UpdateItem (Item item);
     Task<decimal> GetItemPrice(Guid itemId);
+    Task<decimal> GetItemDiscount(Guid itemId);
 }
