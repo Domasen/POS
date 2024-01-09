@@ -45,23 +45,25 @@ public class ItemServices : IItemServices
     {
         Item? item = await GetItem(itemId);
         
-        if (item == null)
-        {
-            return 0;
-        }
-        
-        Discount? discount = await _discountServices.GetDiscount((Guid)item.DiscountId);
-
-        if (discount == null)
+        if (item != null)
         {
             return item.Price;
         }
 
-        if (discount.ValidUntil >= DateTime.Today) 
-        {
-            return item.Price * (1 - ((decimal)discount.DiscountPercentage / 100));
-        }
-
         return 0;
+
+        // Discount? discount = await _discountServices.GetDiscount((Guid)item.DiscountId);
+        //
+        // if (discount == null)
+        // {
+        //     return item.Price;
+        // }
+        //
+        // if (discount.ValidUntil >= DateTime.Today) 
+        // {
+        //     return item.Price * (1 - ((decimal)discount.DiscountPercentage / 100));
+        // }
+        //
+        // return 0;
     }
 }
