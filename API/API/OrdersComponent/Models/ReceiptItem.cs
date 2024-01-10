@@ -3,6 +3,7 @@
 public class ReceiptItem
 {
     public string? ItemName { get; set; }
+    public string? ItemType { get; set; }
     public Decimal UnitPrice { get; set; }
     public Decimal DiscountAmountPerUnit { get; set; }
     public Decimal TaxAmount { get; set; }

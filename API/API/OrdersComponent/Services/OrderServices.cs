@@ -1,7 +1,11 @@
 ﻿using API.Data;
+using API.ItemServiceComponent.Models;
+using API.ItemServiceComponent.Services;
 using API.OrdersComponent.Models;
 using API.OrdersComponent.Repository;
 using API.OrdersComponent.Services;
+using API.ServicesComponent.Models;
+using API.ServicesComponent.Services;
 using API.UsersComponent.Services;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
@@ -14,12 +18,18 @@ public class OrderServices : IOrderServices
     private readonly DataContext _context;
     private readonly IOrderItemServices _orderItemServices;
     private readonly ICustomerServices _customerServices;
-    public OrderServices(IOrderRepository orderRepository, DataContext context, IOrderItemServices orderItemServices,  ICustomerServices customerServices)
+    private readonly IItemServices _itemServices;
+    private readonly IServiceServices _serviceServices;
+    private readonly IAppointmentServices _appointmentServices;
+    public OrderServices(IOrderRepository orderRepository, DataContext context, IOrderItemServices orderItemServices,  ICustomerServices customerServices, IItemServices itemServices, IServiceServices serviceServices, IAppointmentServices appointmentServices)
     {
         _orderRepository = orderRepository;
         _context = context;
         _orderItemServices = orderItemServices;
         _customerServices = customerServices;
+        _itemServices = itemServices;
+        _serviceServices = serviceServices;
+        _appointmentServices = appointmentServices;
     }
     public async Task<Order> AddOrder(Order order)
     {
@@ -73,5 +83,70 @@ public class OrderServices : IOrderServices
     public async Task<Order?> UpdateOrder(Order order)
     {
         return await _orderRepository.UpdateOrder(order);
+    }
+    
+    
+    public async Task<Receipt> GetReceipt(Guid orderId)
+    {
+        List<OrderItem> orderItems = await _orderItemServices.GetOrderItemsByOrderId(orderId);
+        Order? order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+        Receipt receipt = new Receipt();
+
+        if (order != null)
+        {
+            receipt.OrderId = orderId;
+            receipt.ReceiptItems = new List<ReceiptItem>();
+            foreach (var orderItem in orderItems)
+            {
+                receipt.Total += orderItem.Subtotal;
+                string name = "";
+                switch (orderItem.Type)
+                {
+                    case OrderItemType.Item:
+                        Item? item = await _itemServices.GetItem(orderItem.ItemId);
+                        if (item != null)
+                        {
+                            name = item.Name;
+                        }
+                        break;
+                    case OrderItemType.Service:
+                        Service? service = await _serviceServices.GetService(orderItem.ItemId);
+                        if (service != null)
+                        {
+                            name = service.ServiceName;
+                        }
+                        break;
+                    case OrderItemType.Appointment:
+                        Appointment? appointment = await _appointmentServices.GetAppointment(orderItem.ItemId);
+                        if (appointment != null)
+                        {
+                            Service? appointmentService = await _serviceServices.GetService(appointment.ServiceId);
+                            if (appointmentService != null)
+                            {
+                                name = appointmentService.ServiceName;
+                            } 
+                        }
+
+                        break;
+                }
+                
+                ReceiptItem newItem = new ReceiptItem
+                {
+                    ItemName = name,
+                    ItemType = orderItem.Type.ToString(),
+                    UnitPrice = orderItem.UnitPrice,
+                    DiscountAmountPerUnit = orderItem.DiscountAmountPerUnit,
+                    TaxAmount = orderItem.TaxAmount,
+                    Quantity = orderItem.Quantity,
+                    Subtotal = orderItem.Subtotal
+                };
+                receipt.ReceiptItems.Add(newItem);
+            }
+
+            receipt.Total += order.Tip;
+            receipt.Tip = order.Tip;
+        }
+
+        return receipt;
     }
 }

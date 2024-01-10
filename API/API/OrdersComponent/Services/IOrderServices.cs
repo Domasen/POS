@@ -9,4 +9,5 @@ public interface IOrderServices
     Task<Order?> GetOrder(Guid orderId);
     Task<IEnumerable<Order>> GetOrders();
     Task<Order?> UpdateOrder (Order order);
+    Task<Receipt> GetReceipt(Guid orderId);
 }

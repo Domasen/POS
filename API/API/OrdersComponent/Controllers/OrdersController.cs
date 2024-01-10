@@ -231,7 +231,7 @@ public class OrdersController : ControllerBase
     {
         try
         {
-            var result = await _orderItemServices.GetReceipt(id);
+            var result = await _orderServices.GetReceipt(id);
 
             if (result == null)
             {
