@@ -2,6 +2,7 @@
 using API.OrdersComponent.Models;
 using API.OrdersComponent.Repository;
 using API.OrdersComponent.Sevices;
+using API.UsersComponent.Services;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
 
@@ -12,16 +13,20 @@ public class OrderServices : IOrderServices
     private readonly IOrderRepository _orderRepository;
     private readonly DataContext _context;
     private readonly IOrderItemServices _orderItemServices;
-    public OrderServices(IOrderRepository orderRepository, DataContext context, IOrderItemServices orderItemServices)
+    private readonly ICustomerServices _customerServices;
+    public OrderServices(IOrderRepository orderRepository, DataContext context, IOrderItemServices orderItemServices,  ICustomerServices customerServices)
     {
         _orderRepository = orderRepository;
         _context = context;
         _orderItemServices = orderItemServices;
+        _customerServices = customerServices;
     }
     public async Task<Order> AddOrder(Order order)
     {
         return await _orderRepository.AddOrder(order);
+
     }
+   
 
     public async Task<Order?> DeleteOrder(Guid orderId)
     {

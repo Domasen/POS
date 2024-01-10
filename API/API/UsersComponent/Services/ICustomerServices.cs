@@ -9,4 +9,6 @@ public interface ICustomerServices
     Task<Customer?> GetCustomer(Guid customerId);
     Task<IEnumerable<Customer>> GetCustomers();
     Task<Customer?> UpdateCustomer(Customer customer);
+    Task<IEnumerable<Customer>> GetCustomersByLoyaltyId(Guid loyaltyId);
+    Task UpdatePointsForPurchase(Guid customerId, decimal purchaseAmount);
 }

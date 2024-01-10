@@ -1,12 +1,13 @@
 ﻿using API.DiscountLoyaltyComponent.Models;
 using API.DiscountLoyaltyComponent.Repository;
+using API.UsersComponent.Models;
+using API.UsersComponent.Services;
 
 namespace API.DiscountLoyaltyComponent.Services;
 
 public class LoyaltyProgramServices : ILoyaltyProgramServices
 {
     private readonly ILoyaltyProgramRepository _loyaltyProgramRepository;
-    
     public LoyaltyProgramServices(ILoyaltyProgramRepository loyaltyProgramRepository)
     {
         _loyaltyProgramRepository = loyaltyProgramRepository;

@@ -1,20 +1,41 @@
-﻿using API.PaymentComponent.Models;
+﻿using API.OrdersComponent.Models;
+using API.OrdersComponent.Sevices;
+using API.PaymentComponent.Models;
 using API.PaymentComponent.Repository;
+using API.UsersComponent.Services;
 
 namespace API.PaymentComponent.Services;
 
 public class PaymentServices : IPaymentServices
 {
     private readonly IPaymentRepository _paymentRepository;
+    private readonly ICustomerServices _customerServices;
+    private readonly IOrderServices _orderServices;
     
-    public PaymentServices(IPaymentRepository paymentRepository)
+    public PaymentServices(IPaymentRepository paymentRepository, ICustomerServices customerServices, IOrderServices orderServices)
     {
         _paymentRepository = paymentRepository;
+        _customerServices = customerServices;
+        _orderServices = orderServices;
     }
     
     public async Task<Payment> AddPayment(Payment payment)
     {
-        return await _paymentRepository.AddPayment(payment);
+        var addPayment =  await _paymentRepository.AddPayment(payment);
+        Order? order = await _orderServices.GetOrder(payment.OrderId);
+       
+        if (order != null)
+        {
+            await UpdatePointsForPurchase(order.CustomerId, order.TotalAmount);
+        }
+
+        return addPayment;
+        
+    }
+    
+    private async Task UpdatePointsForPurchase(Guid customerId, decimal purchaseAmount)
+    {
+        await _customerServices.UpdatePointsForPurchase(customerId, purchaseAmount);
     }
 
     public async Task<Payment?> DeletePayment(Guid paymentId)

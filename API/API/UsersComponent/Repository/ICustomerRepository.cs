@@ -9,4 +9,5 @@ public interface ICustomerRepository
     Task<Customer?> GetCustomer(Guid customerId);
     Task<IEnumerable<Customer>> GetCustomers();
     Task<Customer?> UpdateCustomer(Customer customer);
+    Task<IEnumerable<Customer>> GetCustomersByLoyaltyId(Guid loyaltyId);
 }

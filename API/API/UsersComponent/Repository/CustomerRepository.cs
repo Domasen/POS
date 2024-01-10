@@ -62,4 +62,9 @@ public class CustomerRepository : ICustomerRepository
         
         return null;
     }
+
+    public async Task<IEnumerable<Customer>> GetCustomersByLoyaltyId(Guid loyaltyId)
+    {
+        return await _context.Customers.Where(c => c.LoyaltyId == loyaltyId).ToListAsync();
+    }
 }
