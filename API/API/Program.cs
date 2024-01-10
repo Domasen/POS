@@ -6,7 +6,7 @@ using API.ItemServiceComponent.Services;
 using API.OrdersComponent.Models;
 using API.OrdersComponent.Repository;
 using API.OrdersComponent.Services;
-using API.OrdersComponent.Sevices;
+using API.OrdersComponent.Services;
 using API.PaymentComponent.Repository;
 using API.PaymentComponent.Services;
 using API.ServicesComponent.Services;

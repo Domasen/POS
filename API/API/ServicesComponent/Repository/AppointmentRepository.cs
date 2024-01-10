@@ -53,7 +53,6 @@ public class AppointmentRepository : IAppointmentRepository
             result.CustomerId = appointment.CustomerId;
             result.ServiceId = appointment.ServiceId;
             result.EmployeeId = appointment.EmployeeId;
-            result.BusinessId = appointment.BusinessId;
             result.ReservationTime = appointment.ReservationTime;
             result.EndTime = appointment.EndTime;
             result.Duration = appointment.Duration;
