@@ -1,6 +1,6 @@
 ﻿using API.OrdersComponent.Models;
 using API.OrdersComponent.Services;
-using API.OrdersComponent.Sevices;
+using API.OrdersComponent.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.OrdersComponent.Controllers;
@@ -223,6 +223,27 @@ public class OrdersController : ControllerBase
         {
             return StatusCode(StatusCodes.Status500InternalServerError,
                 "Error updating data");
+        }
+    }
+    
+    [HttpGet("Receipt/{id}")]
+    public async Task<ActionResult<Receipt>> GetOrderReceipt(Guid id)
+    {
+        try
+        {
+            var result = await _orderItemServices.GetReceipt(id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return result;
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                "Error retrieving data from the database");
         }
     }
 }

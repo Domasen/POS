@@ -1,6 +1,6 @@
 ﻿using API.OrdersComponent.Models;
 
-namespace API.OrdersComponent.Sevices;
+namespace API.OrdersComponent.Services;
 
 public interface IOrderServices
 {

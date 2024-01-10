@@ -1,7 +1,7 @@
 ﻿using API.Data;
 using API.OrdersComponent.Models;
 using API.OrdersComponent.Repository;
-using API.OrdersComponent.Sevices;
+using API.OrdersComponent.Services;
 using API.UsersComponent.Services;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;

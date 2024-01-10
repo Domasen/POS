@@ -1,8 +1,10 @@
 ﻿using API.Data;
+using API.ItemServiceComponent.Models;
 using API.ItemServiceComponent.Services;
 using API.Migrations;
 using API.OrdersComponent.Models;
 using API.OrdersComponent.Repository;
+using API.OrdersComponent.Services;
 using API.ServicesComponent.Models;
 using API.ServicesComponent.Services;
 using API.TaxComponent.Models;
@@ -94,6 +96,69 @@ public class OrderItemServices : IOrderItemServices
         return await _context.OrderItems.Where(oi => oi.OrderId == orderId).ToListAsync();
     }
 
+    public async Task<Receipt> GetReceipt(Guid orderId)
+    {
+        List<OrderItem> orderItems = await GetOrderItemsByOrderId(orderId);
+        Order? order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+        Receipt receipt = new Receipt();
+
+        if (order != null)
+        {
+            receipt.OrderId = orderId;
+            receipt.ReceiptItems = new List<ReceiptItem>();
+            foreach (var orderItem in orderItems)
+            {
+                receipt.Total += orderItem.Subtotal;
+                string name = "";
+                switch (orderItem.Type)
+                {
+                    case OrderItemType.Item:
+                        Item? item = await _itemServices.GetItem(orderItem.ItemId);
+                        if (item != null)
+                        {
+                            name = item.Name;
+                        }
+                        break;
+                    case OrderItemType.Service:
+                        Service? service = await _serviceServices.GetService(orderItem.ItemId);
+                        if (service != null)
+                        {
+                            name = service.ServiceName;
+                        }
+                        break;
+                    case OrderItemType.Appointment:
+                        Appointment? appointment = await _appointmentServices.GetAppointment(orderItem.ItemId);
+                        if (appointment != null)
+                        {
+                            Service? appointmentService = await _serviceServices.GetService(orderItem.ItemId);
+                            if (appointmentService != null)
+                            {
+                                name = appointmentService.ServiceName;
+                            } 
+                        }
+
+                        break;
+                }
+                
+                ReceiptItem newItem = new ReceiptItem
+                {
+                    ItemName = name,
+                    UnitPrice = orderItem.UnitPrice,
+                    DiscountAmountPerUnit = orderItem.DiscountAmountPerUnit,
+                    TaxAmount = orderItem.TaxAmount,
+                    Quantity = orderItem.Quantity,
+                    Subtotal = orderItem.Subtotal
+                };
+                receipt.ReceiptItems.Add(newItem);
+            }
+
+            receipt.Total += order.Tip;
+            receipt.Tip = order.Tip;
+        }
+
+        return receipt;
+    }
+
     private async Task<Decimal> CalculateTax(Guid taxId, Decimal unitPrice, Decimal discountAmountPerUnit, Decimal quantity)
     {
         Tax? tax = await _taxServices.GetTax(taxId);
@@ -113,4 +178,6 @@ public class OrderItemServices : IOrderItemServices
 
         return 0;
     }
+    
+    
 }

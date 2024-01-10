@@ -1,5 +1,5 @@
 ﻿using API.OrdersComponent.Models;
-using API.OrdersComponent.Sevices;
+using API.OrdersComponent.Services;
 using API.PaymentComponent.Models;
 using API.PaymentComponent.Repository;
 using API.UsersComponent.Services;
