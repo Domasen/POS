@@ -1,4 +1,6 @@
-﻿namespace API.PaymentComponent.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace API.PaymentComponent.Models;
 public enum PaymentStatus 
     {
         Pending,
@@ -16,6 +18,7 @@ public class Payment
     public Guid PaymentMethodId { get; set; }
     public PaymentStatus Status { get; set; }
     public decimal Amount { get; set; }
+    public decimal Change { get; set; }
     public DateTime PaymentDate { get; set; }
 
 }

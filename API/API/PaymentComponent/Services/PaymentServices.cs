@@ -26,6 +26,7 @@ public class PaymentServices : IPaymentServices
        
         if (order != null)
         {
+            payment.Change = CalculateChange(order.TotalAmount, payment);
             await UpdatePointsForPurchase(order.CustomerId, order.TotalAmount);
         }
 
@@ -33,6 +34,13 @@ public class PaymentServices : IPaymentServices
         
     }
     
+    private decimal CalculateChange(decimal purchaseAmount, Payment payment)
+    {
+        decimal change = payment.Amount - purchaseAmount;
+        return change;
+    }
+    
+
     private async Task UpdatePointsForPurchase(Guid customerId, decimal purchaseAmount)
     {
         await _customerServices.UpdatePointsForPurchase(customerId, purchaseAmount);
