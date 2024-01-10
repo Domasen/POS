@@ -3,7 +3,7 @@
 public class LoyaltyProgram
 {
     public Guid Id { get; set; }
-    public int PointsPerPurchase { get; set; }
+    public decimal PointsPerAmount { get; set; }
     public String? RedemptionRules { get; set; } 
     public String? SpecialBenefits { get; set; } 
     

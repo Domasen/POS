@@ -23,15 +23,10 @@ public class OrderServices : IOrderServices
     }
     public async Task<Order> AddOrder(Order order)
     {
-        var addedOrder =  await _orderRepository.AddOrder(order);
-        await UpdatePointsForPurchase(order.CustomerId, order.TotalAmount);
-        return addedOrder;
+        return await _orderRepository.AddOrder(order);
 
     }
-    private async Task UpdatePointsForPurchase(Guid customerId, decimal purchaseAmount)
-    {
-        await _customerServices.UpdatePointsForPurchase(customerId, purchaseAmount);
-    }
+   
 
     public async Task<Order?> DeleteOrder(Guid orderId)
     {

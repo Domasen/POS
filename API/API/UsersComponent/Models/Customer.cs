@@ -8,6 +8,6 @@ public class Customer
     public string LastName { get; set; } = String.Empty;
     public DateTime Birthday { get; set; }
     public string Address { get; set; } = String.Empty;
-    public int Points { get; set; }
+    public decimal Points { get; set; }
 
 }

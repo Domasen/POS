@@ -54,7 +54,7 @@ public class LoyaltyProgramRepository : ILoyaltyProgramRepository
         if (result != null)
         {
             result.Id = loyaltyProgram.Id;
-            result.PointsPerPurchase = loyaltyProgram.PointsPerPurchase;
+            result.PointsPerAmount = loyaltyProgram.PointsPerAmount;
             result.RedemptionRules = loyaltyProgram.RedemptionRules;
             result.SpecialBenefits = loyaltyProgram.SpecialBenefits;
             

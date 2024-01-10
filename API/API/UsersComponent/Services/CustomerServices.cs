@@ -59,7 +59,7 @@ public class CustomerServices : ICustomerServices
             if (loyaltyProgram != null)
             {
                 // Atnaujinti taškus pagal pirkimo sumą ir programos nustatymus
-                var pointsToAdd = (int)(purchaseAmount / loyaltyProgram.PointsPerPurchase);
+                var pointsToAdd = (decimal)(purchaseAmount / loyaltyProgram.PointsPerAmount);
                 customer.Points += pointsToAdd;
 
                 // Atnaujinti kliento taškus duomenų bazėje
