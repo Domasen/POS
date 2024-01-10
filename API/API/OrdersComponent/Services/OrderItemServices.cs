@@ -3,6 +3,7 @@ using API.ItemServiceComponent.Services;
 using API.Migrations;
 using API.OrdersComponent.Models;
 using API.OrdersComponent.Repository;
+using API.ServicesComponent.Models;
 using API.ServicesComponent.Services;
 using API.TaxComponent.Models;
 using API.TaxComponent.Services;
@@ -16,13 +17,15 @@ public class OrderItemServices : IOrderItemServices
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly IItemServices _itemServices;
     private readonly IServiceServices _serviceServices;
+    private readonly IAppointmentServices _appointmentServices;
     private readonly ITaxServices _taxServices;
     private readonly DataContext _context;
-    public OrderItemServices(IOrderItemRepository orderItemRepository, IItemServices itemServices, IServiceServices serviceServices, ITaxServices taxServices, DataContext context)
+    public OrderItemServices(IOrderItemRepository orderItemRepository, IItemServices itemServices, IServiceServices serviceServices, ITaxServices taxServices, IAppointmentServices appointmentServices, DataContext context)
     {
         _orderItemRepository = orderItemRepository;
         _itemServices = itemServices;
         _serviceServices = serviceServices;
+        _appointmentServices = appointmentServices;
         _taxServices = taxServices;
         _context = context;
     }
@@ -45,6 +48,16 @@ public class OrderItemServices : IOrderItemServices
                 orderItem.Subtotal = CalculateSubtotal(orderItem.Quantity, orderItem.UnitPrice, orderItem.DiscountAmountPerUnit, orderItem.TaxAmount);
                 break;
             case OrderItemType.Appointment:
+                Appointment? appointment = await _appointmentServices.GetAppointment(orderItem.ItemId);
+                if (appointment != null)
+                {
+                    orderItem.UnitPrice = await _serviceServices.GetServicePrice(appointment.ServiceId);
+                    orderItem.DiscountAmountPerUnit = await _serviceServices.GetServiceDiscount(appointment.ServiceId);
+                    orderItem.TaxAmount = await CalculateTax(orderItem.TaxId, orderItem.UnitPrice,
+                        orderItem.DiscountAmountPerUnit, orderItem.Quantity);
+                    orderItem.Subtotal = CalculateSubtotal(orderItem.Quantity, orderItem.UnitPrice, orderItem.DiscountAmountPerUnit, orderItem.TaxAmount);
+                }
+
                 break;
         }
 
