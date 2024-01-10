@@ -17,7 +17,7 @@ public class OrdersController : ControllerBase
         _orderItemServices = orderItemServices;
     }
     
-    [HttpPost("Order")]
+    [HttpPost("Order/Order")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<Order>> CreateOrder([FromBody]Order? order)
     {
@@ -38,7 +38,7 @@ public class OrdersController : ControllerBase
         }
     } 
     
-    [HttpGet("Order/Orders")]
+    [HttpGet("Order/Order/Orders")]
     public async Task<ActionResult<List<Order>>> GetOrders()
     {
         try
@@ -52,7 +52,7 @@ public class OrdersController : ControllerBase
         }
     }
     
-    [HttpGet("Order/{id}")]
+    [HttpGet("Order/Order/{id}")]
     public async Task<ActionResult<Order>> GetOrder(Guid id)
     {
         try
@@ -73,7 +73,7 @@ public class OrdersController : ControllerBase
         }
     }
 
-    [HttpDelete("Order/{id}")]
+    [HttpDelete("Order/Order/{id}")]
     public async Task<ActionResult<Order>> DeleteOrder(Guid id)
     {
         try
@@ -95,7 +95,7 @@ public class OrdersController : ControllerBase
     }
     
     //Validacija i atskira metoda
-    [HttpPut("Order/{id}")]
+    [HttpPut("Order/Order/{id}")]
     public async Task<ActionResult<Order>> UpdateOrder(Guid id, [FromBody]Order order)
     {
         try
@@ -123,7 +123,7 @@ public class OrdersController : ControllerBase
     
     //////////OrderItem
     
-    [HttpPost("OrderItem")]
+    [HttpPost("Order/OrderItem")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<OrderItem>> CreateOrderItem([FromBody]OrderItem? orderItem)
     {
@@ -144,7 +144,7 @@ public class OrdersController : ControllerBase
         }
     } 
     
-    [HttpGet("OrderItem/OrderItems")]
+    [HttpGet("Order/OrderItem/OrderItems")]
     public async Task<ActionResult<List<OrderItem>>> GetOrderItems()
     {
         try
@@ -158,7 +158,7 @@ public class OrdersController : ControllerBase
         }
     }
     
-    [HttpGet("OrderItem/{id}")]
+    [HttpGet("Order/OrderItem/{id}")]
     public async Task<ActionResult<OrderItem>> GetOrderItem(Guid id)
     {
         try
@@ -179,7 +179,7 @@ public class OrdersController : ControllerBase
         }
     }
 
-    [HttpDelete("OrderItem/{id}")]
+    [HttpDelete("Order/OrderItem/{id}")]
     public async Task<ActionResult<OrderItem>> DeleteOrderItem(Guid id)
     {
         try
@@ -200,7 +200,7 @@ public class OrdersController : ControllerBase
         }
     }
     
-    [HttpPut("OrderItem/{id}")]
+    [HttpPut("Order/OrderItem/{id}")]
     public async Task<ActionResult<OrderItem>> UpdateOrderItem(Guid id, [FromBody]OrderItem orderItem)
     {
         try
@@ -226,7 +226,7 @@ public class OrdersController : ControllerBase
         }
     }
     
-    [HttpGet("Receipt/{id}")]
+    [HttpGet("Order/Receipt/{id}")]
     public async Task<ActionResult<Receipt>> GetOrderReceipt(Guid id)
     {
         try
