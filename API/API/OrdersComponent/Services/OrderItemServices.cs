@@ -28,39 +28,47 @@ public class OrderItemServices : IOrderItemServices
         _taxServices = taxServices;
         _context = context;
     }
-    public async Task<OrderItem> AddOrderItem(OrderItem orderItem)
+    public async Task<OrderItem> AddOrderItem(OrderItemDto orderItem)
     {
+        OrderItem orderItemCreated = new OrderItem()
+        {
+            OrderId = orderItem.OrderId,
+            ItemId = orderItem.ItemId,
+            TaxId = orderItem.TaxId,
+            Type = orderItem.Type,
+            Quantity = orderItem.Quantity
+        };
         switch (orderItem.Type)
         {
             case OrderItemType.Item:
-                orderItem.UnitPrice = await _itemServices.GetItemPrice(orderItem.ItemId);
-                orderItem.DiscountAmountPerUnit = await _itemServices.GetItemDiscount(orderItem.ItemId);
-                orderItem.TaxAmount = await CalculateTax(orderItem.TaxId, orderItem.UnitPrice,
-                    orderItem.DiscountAmountPerUnit, orderItem.Quantity);
-                orderItem.Subtotal = CalculateSubtotal(orderItem.Quantity, orderItem.UnitPrice, orderItem.DiscountAmountPerUnit, orderItem.TaxAmount);
+                orderItemCreated.UnitPrice = await _itemServices.GetItemPrice(orderItem.ItemId);
+                orderItemCreated.DiscountAmountPerUnit = await _itemServices.GetItemDiscount(orderItem.ItemId);
+                orderItemCreated.TaxAmount = await CalculateTax(orderItem.TaxId, orderItemCreated.UnitPrice,
+                    orderItemCreated.DiscountAmountPerUnit, orderItem.Quantity);
+                orderItemCreated.Subtotal = CalculateSubtotal(orderItem.Quantity, orderItemCreated.UnitPrice, orderItemCreated.DiscountAmountPerUnit, orderItemCreated.TaxAmount);
                 break;
             case OrderItemType.Service:
-                orderItem.UnitPrice = await _serviceServices.GetServicePrice(orderItem.ItemId);
-                orderItem.DiscountAmountPerUnit = await _serviceServices.GetServiceDiscount(orderItem.ItemId);
-                orderItem.TaxAmount = await CalculateTax(orderItem.TaxId, orderItem.UnitPrice,
-                    orderItem.DiscountAmountPerUnit, orderItem.Quantity);
-                orderItem.Subtotal = CalculateSubtotal(orderItem.Quantity, orderItem.UnitPrice, orderItem.DiscountAmountPerUnit, orderItem.TaxAmount);
+                orderItemCreated.UnitPrice = await _serviceServices.GetServicePrice(orderItem.ItemId);
+                orderItemCreated.DiscountAmountPerUnit = await _serviceServices.GetServiceDiscount(orderItem.ItemId);
+                orderItemCreated.TaxAmount = await CalculateTax(orderItem.TaxId, orderItemCreated.UnitPrice,
+                    orderItemCreated.DiscountAmountPerUnit, orderItem.Quantity);
+                orderItemCreated.Subtotal = CalculateSubtotal(orderItem.Quantity, orderItemCreated.UnitPrice, orderItemCreated.DiscountAmountPerUnit, orderItemCreated.TaxAmount);
                 break;
             case OrderItemType.Appointment:
                 Appointment? appointment = await _appointmentServices.GetAppointment(orderItem.ItemId);
                 if (appointment != null)
                 {
-                    orderItem.UnitPrice = await _serviceServices.GetServicePrice(appointment.ServiceId);
-                    orderItem.DiscountAmountPerUnit = await _serviceServices.GetServiceDiscount(appointment.ServiceId);
-                    orderItem.TaxAmount = await CalculateTax(orderItem.TaxId, orderItem.UnitPrice,
-                        orderItem.DiscountAmountPerUnit, orderItem.Quantity);
-                    orderItem.Subtotal = CalculateSubtotal(orderItem.Quantity, orderItem.UnitPrice, orderItem.DiscountAmountPerUnit, orderItem.TaxAmount);
+                    orderItemCreated.UnitPrice = await _serviceServices.GetServicePrice(appointment.ServiceId);
+                    orderItemCreated.DiscountAmountPerUnit = await _serviceServices.GetServiceDiscount(appointment.ServiceId);
+                    orderItemCreated.TaxAmount = await CalculateTax(orderItem.TaxId, orderItemCreated.UnitPrice,
+                        orderItemCreated.DiscountAmountPerUnit, orderItem.Quantity);
+                    orderItemCreated.Subtotal = CalculateSubtotal(orderItem.Quantity, orderItemCreated.UnitPrice, orderItemCreated.DiscountAmountPerUnit, orderItemCreated.TaxAmount);
                 }
 
                 break;
         }
 
-        return await _orderItemRepository.AddOrderItem(orderItem);
+        return await _orderItemRepository.AddOrderItem(orderItemCreated);
     }
 
     public async Task<OrderItem?> DeleteOrderItem(Guid orderItemId)
