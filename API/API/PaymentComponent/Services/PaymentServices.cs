@@ -19,14 +19,23 @@ public class PaymentServices : IPaymentServices
         _orderServices = orderServices;
     }
     
-    public async Task<Payment> AddPayment(Payment payment)
+    public async Task<Payment> AddPayment(PaymentDto payment)
     {
-        var addPayment =  await _paymentRepository.AddPayment(payment);
+        Payment paymentCreated = new Payment()
+        {
+            OrderId = payment.OrderId,
+            PaymentMethodId = payment.PaymentMethodId,
+            Status = PaymentStatus.Complete,
+            Amount = payment.Amount,
+            PaymentDate = payment.PaymentDate
+        };
+        var addPayment =  await _paymentRepository.AddPayment(paymentCreated);
         Order? order = await _orderServices.GetOrder(payment.OrderId);
        
         if (order != null)
         {
-            payment.Change = CalculateChange(order.TotalAmount, payment);
+            order.Status = Status.Paid;
+            paymentCreated.Change = CalculateChange(order.TotalAmount, paymentCreated);
             await UpdatePointsForPurchase(order.CustomerId, order.TotalAmount);
         }
 

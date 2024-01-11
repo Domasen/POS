@@ -23,7 +23,7 @@ public class PaymentController : ControllerBase
     
     [HttpPost("Payment")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<Payment>> CreatePayment(Payment? payment)
+    public async Task<ActionResult<Payment>> CreatePayment(PaymentDto? payment)
     {
         try
         {
