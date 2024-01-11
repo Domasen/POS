@@ -17,14 +17,21 @@ public class AppointmentServices : IAppointmentServices
         _serviceServices = serviceServices;
         _context = context;
     }
-    public async Task<Appointment> AddAppointment(Appointment appointment)
+    public async Task<Appointment> AddAppointment(AppointmentDto appointment)
     {
+        Appointment appointmentCreated = new Appointment()
+        {
+            CustomerId = appointment.CustomerId,
+            ServiceId = appointment.ServiceId,
+            EmployeeId = appointment.EmployeeId,
+            ReservationTime = appointment.ReservationTime
+        };
         int duration = await GetAppointmentDuration(appointment.ServiceId);
         DateTime startTime = appointment.ReservationTime;
-        appointment.Duration = duration;
-        appointment.EndTime = startTime.AddMinutes(duration);
-        appointment.Status = AppointmentStatus.Open;
-        return await _appointmentRepository.AddAppointment(appointment);
+        appointmentCreated.Duration = duration;
+        appointmentCreated.EndTime = startTime.AddMinutes(duration);
+        appointmentCreated.Status = AppointmentStatus.Open;
+        return await _appointmentRepository.AddAppointment(appointmentCreated);
     }
 
     public async Task<Appointment?> DeleteAppointment(Guid appointmentId)
