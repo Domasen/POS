@@ -56,6 +56,7 @@ public class AppointmentRepository : IAppointmentRepository
             result.ReservationTime = appointment.ReservationTime;
             result.EndTime = appointment.EndTime;
             result.Duration = appointment.Duration;
+            result.Status = appointment.Status;
 
             await _context.SaveChangesAsync();
 

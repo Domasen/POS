@@ -225,4 +225,18 @@ public class ServiceController : ControllerBase
                 "Error updating data");
         }
     }
+    
+    [HttpGet("Appointment/FreeSlots")]
+    public async Task<ActionResult<List<TimeSlot>>> GetFreeSlots(Guid serviceId, Guid staffId, DateTime appointmentDate)
+    {
+        try
+        {
+            return Ok(await _appointmentServices.GetFreeTimes(serviceId, staffId, DateOnly.FromDateTime(appointmentDate), new TimeOnly(9,0), new TimeOnly(17, 0)));
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                "Error retrieving data from the database");
+        }
+    }
 }
