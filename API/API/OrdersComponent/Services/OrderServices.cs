@@ -31,10 +31,17 @@ public class OrderServices : IOrderServices
         _serviceServices = serviceServices;
         _appointmentServices = appointmentServices;
     }
-    public async Task<Order> AddOrder(Order order)
+    public async Task<Order> AddOrder(OrderDto order)
     {
-        return await _orderRepository.AddOrder(order);
-
+        Order orderCreated = new Order()
+        {
+            CustomerId = order.CustomerId,
+            StaffId = order.StaffId,
+            Status = Status.Unpaid,
+            Date = order.Date,
+            Tip = order.Tip
+        };
+        return await _orderRepository.AddOrder(orderCreated);
     }
    
 
