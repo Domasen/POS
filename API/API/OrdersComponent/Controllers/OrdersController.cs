@@ -19,7 +19,7 @@ public class OrdersController : ControllerBase
     
     [HttpPost("Order/Order")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<Order>> CreateOrder([FromBody]Order? order)
+    public async Task<ActionResult<Order>> CreateOrder([FromBody]OrderDto? order)
     {
         try
         {
@@ -125,7 +125,7 @@ public class OrdersController : ControllerBase
     
     [HttpPost("Order/OrderItem")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<OrderItem>> CreateOrderItem([FromBody]OrderItem? orderItem)
+    public async Task<ActionResult<OrderItem>> CreateOrderItem([FromBody]OrderItemDto? orderItem)
     {
         try
         {

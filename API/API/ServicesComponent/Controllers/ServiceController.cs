@@ -22,7 +22,7 @@ public class ServiceController : ControllerBase
     [HttpPost("Service")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     
-    public async Task<ActionResult<Service>> CreateService(Service? service)
+    public async Task<ActionResult<Service>> CreateService(ServiceDto? service)
     {
         try
         {
@@ -125,7 +125,7 @@ public class ServiceController : ControllerBase
     
     [HttpPost("Appointment")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<Appointment>> CreateAppointment(Appointment? appointment)
+    public async Task<ActionResult<Appointment>> CreateAppointment(AppointmentDto? appointment)
     {
         try
         {

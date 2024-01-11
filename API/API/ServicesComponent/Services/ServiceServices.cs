@@ -14,9 +14,18 @@ public class ServiceServices : IServiceServices
         _serviceRepository = serviceRepository;
         _discountServices = discountServices;
     }
-    public async Task<Service> AddService(Service service)
+    public async Task<Service> AddService(ServiceDto service)
     {
-        return await _serviceRepository.AddService(service);
+        Service serviceCreated = new Service()
+        {
+            StaffId = service.StaffId,
+            DiscountId = service.DiscountId,
+            ServiceName = service.ServiceName,
+            ServiceDescription = service.ServiceDescription,
+            Duration = service.Duration,
+            Price = service.Price
+        };
+        return await _serviceRepository.AddService(serviceCreated);
     }
 
     public async Task<Service?> DeleteService(Guid serviceId)

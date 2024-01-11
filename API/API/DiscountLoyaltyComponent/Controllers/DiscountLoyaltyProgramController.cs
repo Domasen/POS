@@ -23,7 +23,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
     
     [HttpPost("LoyaltyProgram")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<LoyaltyProgram>> CreateLoyaltyProgram(LoyaltyProgram? loyaltyProgram)
+    public async Task<ActionResult<LoyaltyProgram>> CreateLoyaltyProgram(LoyaltyProgramDto? loyaltyProgram)
     {
         try
         {
@@ -129,7 +129,7 @@ public class DiscountLoyaltyProgramController : ControllerBase
     
     [HttpPost("Discount")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<Discount>> CreateDiscount(Discount? discount)
+    public async Task<ActionResult<Discount>> CreateDiscount(DiscountDto? discount)
     {
         try
         {

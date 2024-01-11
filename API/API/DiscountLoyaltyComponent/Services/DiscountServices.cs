@@ -11,9 +11,15 @@ public class DiscountServices : IDiscountServices
     {
         _discountRepository = discountRepository;
     }
-    public async Task<Discount> AddDiscount(Discount discount)
+    public async Task<Discount> AddDiscount(DiscountDto discount)
     {
-        return await _discountRepository.AddDiscount(discount);
+        Discount discountCreated = new Discount()
+        {
+            DiscountName = discount.DiscountName,
+            DiscountPercentage = discount.DiscountPercentage,
+            ValidUntil = discount.ValidUntil
+        };
+        return await _discountRepository.AddDiscount(discountCreated);
     }
 
     public async Task<Discount?> DeleteDiscount(Guid discountId)
