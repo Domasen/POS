@@ -16,9 +16,17 @@ public class CustomerServices : ICustomerServices
         _loyaltyProgramRepository = loyaltyProgramRepository;
     }
 
-    public async Task<Customer> AddCustomer(Customer customer)
+    public async Task<Customer> AddCustomer(CustomerDto customer)
     {
-        return await _customerRepository.AddCustomer(customer);
+        Customer customerCreated = new Customer()
+        {
+            LoyaltyId = customer.LoyaltyId,
+            FirstName = customer.FirstName,
+            LastName = customer.LastName,
+            Birthday = customer.Birthday,
+            Address = customer.Address
+        };
+        return await _customerRepository.AddCustomer(customerCreated);
     }
 
     public async Task<Customer?> DeleteCustomer(Guid customerId)

@@ -125,7 +125,7 @@ public class CustomerStaffController : ControllerBase
      
      [HttpPost("Customer")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<Customer>> CreateCustomer(Customer? customer)
+    public async Task<ActionResult<Customer>> CreateCustomer(CustomerDto? customer)
     {
         try
         {
