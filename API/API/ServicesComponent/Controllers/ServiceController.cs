@@ -134,6 +134,16 @@ public class ServiceController : ControllerBase
                 return BadRequest();
             }
 
+            Boolean isSlotAvailable = await _appointmentServices.CheckSlotAvailability(appointment.ServiceId,
+                appointment.EmployeeId,
+                appointment.ReservationTime);
+            
+            if (isSlotAvailable == false)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest,
+                    "There is no available time slot for this appointment. Please check available time slots");
+            }
+
             var createdAppointment = await _appointmentServices.AddAppointment(appointment);
 
             return CreatedAtAction(nameof(GetAppointment), new { id = createdAppointment.Id }, createdAppointment);

@@ -8,15 +8,22 @@ namespace API.ServicesComponent.Services;
 public class AppointmentServices : IAppointmentServices
 {
     private readonly IAppointmentRepository _appointmentRepository;
+    private readonly IServiceServices _serviceServices;
     private readonly DataContext _context;
 
-    public AppointmentServices(IAppointmentRepository appointmentRepository, DataContext context)
+    public AppointmentServices(IAppointmentRepository appointmentRepository, IServiceServices serviceServices, DataContext context)
     {
         _appointmentRepository = appointmentRepository;
+        _serviceServices = serviceServices;
         _context = context;
     }
     public async Task<Appointment> AddAppointment(Appointment appointment)
     {
+        int duration = await GetAppointmentDuration(appointment.ServiceId);
+        DateTime startTime = appointment.ReservationTime;
+        appointment.Duration = duration;
+        appointment.EndTime = startTime.AddMinutes(duration);
+        appointment.Status = AppointmentStatus.Open;
         return await _appointmentRepository.AddAppointment(appointment);
     }
 
@@ -95,5 +102,43 @@ public class AppointmentServices : IAppointmentServices
         return freeTimeSlots;
     }
 
+    public async Task<bool> CheckSlotAvailability(Guid serviceId, Guid staffId, DateTime reservationTime)
+    {
+        // Retrieve existing appointments for the given day
+        var existingAppointments =  await _context.Appointments
+            .Where(a => a.EmployeeId == staffId &&
+                        a.ServiceId == serviceId &&
+                        a.Status == AppointmentStatus.Open &&
+                        a.ReservationTime.Date == reservationTime.Date)
+            .OrderBy(a => a.ReservationTime)
+            .ToListAsync();
 
+        // Calculate the end time of the new appointment
+        var newAppointmentEndTime = reservationTime.AddMinutes(await GetAppointmentDuration(serviceId));
+
+        foreach (var appointment in existingAppointments)
+        {
+            // Check if the new appointment overlaps with any existing appointments
+            if (reservationTime < appointment.EndTime && newAppointmentEndTime > appointment.ReservationTime)
+            {
+                // There is an overlap, so the slot is not available
+                return false;
+            }
+        }
+
+        // No overlap found, the slot is available
+        return true;
+    }
+
+    private async Task<int> GetAppointmentDuration(Guid serviceId)
+    {
+        Service? service = await _serviceServices.GetService(serviceId);
+
+        if (service != null)
+        {
+            return service.Duration;
+        }
+
+        return 0;
+    }
 }
