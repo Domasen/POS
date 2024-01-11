@@ -4,7 +4,7 @@ namespace API.ServicesComponent.Services;
 
 public interface IServiceServices
 {
-    Task<Service> AddService(Service service);
+    Task<Service> AddService(ServiceDto service);
     Task<Service?> DeleteService(Guid serviceId);
     Task<Service?> GetService(Guid serviceId);
     Task<IEnumerable<Service>> GetServices();
