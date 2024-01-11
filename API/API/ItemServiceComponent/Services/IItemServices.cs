@@ -4,7 +4,7 @@ namespace API.ItemServiceComponent.Services;
 
 public interface IItemServices
 {
-    Task<Item> AddItem(Item item);
+    Task<Item> AddItem(ItemDto item);
     Task<Item?> DeleteItem(Guid itemId);
     Task<Item?> GetItem(Guid itemId);
     Task<IEnumerable<Item>> GetItems();

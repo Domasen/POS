@@ -20,7 +20,7 @@ public class ItemController : ControllerBase
     }
     [HttpPost("Item")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<Item>> CreateItem(Item? item)
+    public async Task<ActionResult<Item>> CreateItem(ItemDto? item)
     {
         try
         {

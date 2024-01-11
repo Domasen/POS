@@ -16,9 +16,16 @@ public class ItemServices : IItemServices
         _itemRepository = itemRepository;
     }
     
-    public async Task<Item> AddItem(Item item)
+    public async Task<Item> AddItem(ItemDto item)
     {
-        return await _itemRepository.AddItem(item);
+        Item itemCreated = new Item()
+        {
+            DiscountId = item.DiscountId,
+            Name = item.Name,
+            Description = item.Description,
+            Price = item.Price
+        };
+        return await _itemRepository.AddItem(itemCreated);
     }
 
     public async Task<Item?> DeleteItem(Guid itemId)
