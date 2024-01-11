@@ -11,4 +11,6 @@ public interface IAppointmentServices
     Task<Appointment?> UpdateAppointment (Appointment appointment);
     Task<IEnumerable<TimeSlot>> GetFreeTimes(Guid serviceId, Guid staffId, DateOnly appointmentDate,
         TimeOnly startingTime, TimeOnly endTime);
+
+    // Task<Boolean> CheckSlotAvailability(Guid serviceId, Guid staffId, DateTime reservationTime);
 }

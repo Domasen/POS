@@ -8,15 +8,22 @@ namespace API.ServicesComponent.Services;
 public class AppointmentServices : IAppointmentServices
 {
     private readonly IAppointmentRepository _appointmentRepository;
+    private readonly IServiceServices _serviceServices;
     private readonly DataContext _context;
 
-    public AppointmentServices(IAppointmentRepository appointmentRepository, DataContext context)
+    public AppointmentServices(IAppointmentRepository appointmentRepository, IServiceServices serviceServices, DataContext context)
     {
         _appointmentRepository = appointmentRepository;
+        _serviceServices = serviceServices;
         _context = context;
     }
     public async Task<Appointment> AddAppointment(Appointment appointment)
     {
+        int duration = await GetAppointmentDuration(appointment.ServiceId);
+        DateTime startTime = appointment.ReservationTime;
+        appointment.Duration = duration;
+        appointment.EndTime = startTime.AddMinutes(duration);
+        appointment.Status = AppointmentStatus.Open;
         return await _appointmentRepository.AddAppointment(appointment);
     }
 
@@ -95,5 +102,20 @@ public class AppointmentServices : IAppointmentServices
         return freeTimeSlots;
     }
 
+    // public Task<bool> CheckSlotAvailability(Guid serviceId, Guid staffId, DateTime reservationTime)
+    // {
+    //     throw new NotImplementedException();
+    // }
 
+    private async Task<int> GetAppointmentDuration(Guid serviceId)
+    {
+        Service? service = await _serviceServices.GetService(serviceId);
+
+        if (service != null)
+        {
+            return service.Duration;
+        }
+
+        return 0;
+    }
 }
