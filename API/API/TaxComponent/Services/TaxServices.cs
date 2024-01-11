@@ -12,9 +12,18 @@ public class TaxServices : ITaxServices
         _taxRepository = taxRepository;
     }
     
-    public async Task<Tax> AddTax(Tax tax)
+    public async Task<Tax> AddTax(TaxDto tax)
     {
-        return await _taxRepository.AddTax(tax);
+        Tax taxCreated = new Tax()
+        {
+            TaxName = tax.TaxName,
+            TaxDescription = tax.TaxDescription,
+            Value = tax.Value,
+            Category = tax.Category,
+            ValidFrom = tax.ValidFrom,
+            ValidUntil = tax.ValidUntil
+        };
+        return await _taxRepository.AddTax(taxCreated);
     }
 
     public async Task<Tax?> DeleteTax(Guid taxId)

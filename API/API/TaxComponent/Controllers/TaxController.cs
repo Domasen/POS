@@ -18,7 +18,7 @@ public class TaxController : ControllerBase
     [HttpPost("Tax")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     
-    public async Task<ActionResult<Tax>> CreateTax([FromBody]Tax? tax)
+    public async Task<ActionResult<Tax>> CreateTax([FromBody]TaxDto? tax)
     {
         try
         {

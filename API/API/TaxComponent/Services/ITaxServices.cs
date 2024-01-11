@@ -4,7 +4,7 @@ namespace API.TaxComponent.Services;
 
 public interface ITaxServices
 {
-    Task<Tax> AddTax(Tax tax);
+    Task<Tax> AddTax(TaxDto tax);
     Task<Tax?> DeleteTax(Guid taxId);
     Task<Tax?> GetTax(Guid taxId);
     Task<IEnumerable<Tax>> GetTaxes();
