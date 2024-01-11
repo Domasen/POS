@@ -21,7 +21,7 @@ public class CustomerStaffController : ControllerBase
     
     [HttpPost("Staff")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<Staff>> CreateStaff(Staff? staff)
+    public async Task<ActionResult<Staff>> CreateStaff(StaffDto? staff)
     {
         try
         {

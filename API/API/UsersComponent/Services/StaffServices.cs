@@ -11,9 +11,17 @@ public class StaffServices : IStaffServices
     {
         _staffRepository = staffRepository;
     }
-    public async Task<Staff> AddStaff(Staff staff)
+    public async Task<Staff> AddStaff(StaffDto staff)
     {
-        return await _staffRepository.AddStaff(staff);
+        Staff staffCreated = new Staff()
+        {
+            FirstName = staff.FirstName,
+            LastName = staff.LastName,
+            Email = staff.Email,
+            HireDate = staff.HireDate,
+            PhoneNumber = staff.PhoneNumber
+        };
+        return await _staffRepository.AddStaff(staffCreated);
     }
 
     public async Task<Staff?> DeleteStaff(Guid staffId)
