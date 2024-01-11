@@ -9,4 +9,6 @@ public interface IAppointmentServices
     Task<Appointment?> GetAppointment(Guid appointmentId);
     Task<IEnumerable<Appointment>> GetAppointments();
     Task<Appointment?> UpdateAppointment (Appointment appointment);
+    Task<IEnumerable<TimeSlot>> GetFreeTimes(Guid serviceId, Guid staffId, DateOnly appointmentDate,
+        TimeOnly startingTime, TimeOnly endTime);
 }
