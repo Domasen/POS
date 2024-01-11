@@ -13,9 +13,15 @@ public class LoyaltyProgramServices : ILoyaltyProgramServices
         _loyaltyProgramRepository = loyaltyProgramRepository;
     }
     
-    public async Task<LoyaltyProgram> AddLoyaltyProgram(LoyaltyProgram loyaltyProgram)
+    public async Task<LoyaltyProgram> AddLoyaltyProgram(LoyaltyProgramDto loyaltyProgram)
     {
-        return await _loyaltyProgramRepository.AddLoyaltyProgram(loyaltyProgram);
+        LoyaltyProgram loyaltyProgramCreated = new LoyaltyProgram()
+        {
+            PointsPerAmount = loyaltyProgram.PointsPerAmount,
+            RedemptionRules = loyaltyProgram.RedemptionRules,
+            SpecialBenefits = loyaltyProgram.SpecialBenefits
+        };
+        return await _loyaltyProgramRepository.AddLoyaltyProgram(loyaltyProgramCreated);
     }
 
     public async Task<LoyaltyProgram?> DeleteLoyaltyProgram(Guid loyaltyProgramId)
