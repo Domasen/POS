@@ -4,7 +4,7 @@ namespace API.PaymentComponent.Services;
 
 public interface IPaymentMethodServices
 {
-    Task<PaymentMethod> AddPaymentMethod(PaymentMethod paymentMethod);
+    Task<PaymentMethod> AddPaymentMethod(PaymentMethodDto paymentMethod);
     Task<PaymentMethod?> DeletePaymentMethod(Guid paymentMethodId);
     Task<PaymentMethod?> GetPaymentMethod(Guid paymentMethodId);
     Task<IEnumerable<PaymentMethod>> GetPaymentMethods();

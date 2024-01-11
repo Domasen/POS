@@ -127,7 +127,7 @@ public class PaymentController : ControllerBase
      
      [HttpPost("PaymentMethod")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<PaymentMethod>> CreatePaymentMethod(PaymentMethod? paymentMethod)
+    public async Task<ActionResult<PaymentMethod>> CreatePaymentMethod(PaymentMethodDto? paymentMethod)
     {
         try
         {

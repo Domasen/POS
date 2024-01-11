@@ -12,9 +12,14 @@ public class PaymentMethodServices : IPaymentMethodServices
         _paymentMethodRepository = paymentMethodRepository;
     }
 
-    public async Task<PaymentMethod> AddPaymentMethod(PaymentMethod paymentMethod)
+    public async Task<PaymentMethod> AddPaymentMethod(PaymentMethodDto paymentMethod)
     {
-        return await _paymentMethodRepository.AddPaymentMethod(paymentMethod);
+        PaymentMethod paymentMethodCreated = new PaymentMethod()
+        {
+            MethodName = paymentMethod.MethodName,
+            MethodDescription = paymentMethod.MethodDescription
+        };
+        return await _paymentMethodRepository.AddPaymentMethod(paymentMethodCreated);
     }
 
     public async Task<PaymentMethod?> DeletePaymentMethod(Guid paymentMethodId)
