@@ -1,13 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.OrdersComponent.Models;
-
-public enum Status
-{
-    Paid,
-    Unpaid
-}
-
 public class Order
 {
     public Guid Id { get; set; }

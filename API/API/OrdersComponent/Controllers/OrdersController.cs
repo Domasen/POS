@@ -1,6 +1,5 @@
 ﻿using API.OrdersComponent.Models;
 using API.OrdersComponent.Services;
-using API.OrdersComponent.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.OrdersComponent.Controllers;
@@ -94,7 +93,6 @@ public class OrdersController : ControllerBase
         }
     }
     
-    //Validacija i atskira metoda
     [HttpPut("Order/Order/{id}")]
     public async Task<ActionResult<Order>> UpdateOrder(Guid id, [FromBody]Order order)
     {
@@ -111,7 +109,7 @@ public class OrdersController : ControllerBase
             {
                 return NotFound($"Order with Id = {id} not found");
             }
-                //daryti servisa kuris zino apie repozitorija controleri nubutu repositorijos
+            
             return await _orderServices.UpdateOrder(order);
         }
         catch (Exception)

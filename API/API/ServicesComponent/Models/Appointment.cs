@@ -1,12 +1,5 @@
 ﻿namespace API.ServicesComponent.Models;
 
-public enum AppointmentStatus
-{
-    Open,
-    Canceled,
-    Copmleted
-}
-
 public class Appointment
 {
     public Guid Id { get; set; }

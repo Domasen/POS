@@ -30,6 +30,7 @@ public class OrderItemServices : IOrderItemServices
     }
     public async Task<OrderItem> AddOrderItem(OrderItemDto orderItem)
     {
+        
         OrderItem orderItemCreated = new OrderItem()
         {
             OrderId = orderItem.OrderId,
@@ -38,6 +39,21 @@ public class OrderItemServices : IOrderItemServices
             Type = orderItem.Type,
             Quantity = orderItem.Quantity
         };
+
+        OrderItem? existingOrderItem = await _context.OrderItems.FirstOrDefaultAsync(o => o.OrderId == orderItem.OrderId &&
+                                                                            o.ItemId == orderItem.ItemId);
+
+        if (existingOrderItem != null)
+        {
+            existingOrderItem.Quantity += orderItem.Quantity;
+            existingOrderItem.TaxAmount = await CalculateTax(existingOrderItem.TaxId, existingOrderItem.UnitPrice,
+                existingOrderItem.DiscountAmountPerUnit, existingOrderItem.Quantity);
+            existingOrderItem.Subtotal = CalculateSubtotal(existingOrderItem.Quantity, existingOrderItem.UnitPrice,
+                existingOrderItem.DiscountAmountPerUnit, existingOrderItem.TaxAmount);
+            await _context.SaveChangesAsync();
+            return existingOrderItem;
+        }
+
         switch (orderItem.Type)
         {
             case OrderItemType.Item:

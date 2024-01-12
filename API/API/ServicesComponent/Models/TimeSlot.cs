@@ -4,9 +4,6 @@ namespace API.ServicesComponent.Models;
 
 public class TimeSlot
 {
-    // public TimeOnly StartTime { get; set; }
-    // public TimeOnly EndTime { get; set; }
-    
     [JsonIgnore]
     public TimeOnly StartTime { get; set; }
 
