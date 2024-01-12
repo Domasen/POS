@@ -3,12 +3,9 @@ using API.ItemServiceComponent.Models;
 using API.ItemServiceComponent.Services;
 using API.OrdersComponent.Models;
 using API.OrdersComponent.Repository;
-using API.OrdersComponent.Services;
 using API.ServicesComponent.Models;
 using API.ServicesComponent.Services;
-using API.UsersComponent.Services;
 using Microsoft.EntityFrameworkCore;
-using SQLitePCL;
 
 namespace API.OrdersComponent.Services;
 
@@ -17,16 +14,14 @@ public class OrderServices : IOrderServices
     private readonly IOrderRepository _orderRepository;
     private readonly DataContext _context;
     private readonly IOrderItemServices _orderItemServices;
-    private readonly ICustomerServices _customerServices;
     private readonly IItemServices _itemServices;
     private readonly IServiceServices _serviceServices;
     private readonly IAppointmentServices _appointmentServices;
-    public OrderServices(IOrderRepository orderRepository, DataContext context, IOrderItemServices orderItemServices,  ICustomerServices customerServices, IItemServices itemServices, IServiceServices serviceServices, IAppointmentServices appointmentServices)
+    public OrderServices(IOrderRepository orderRepository, DataContext context, IOrderItemServices orderItemServices, IItemServices itemServices, IServiceServices serviceServices, IAppointmentServices appointmentServices)
     {
         _orderRepository = orderRepository;
         _context = context;
         _orderItemServices = orderItemServices;
-        _customerServices = customerServices;
         _itemServices = itemServices;
         _serviceServices = serviceServices;
         _appointmentServices = appointmentServices;
@@ -54,7 +49,6 @@ public class OrderServices : IOrderServices
     {
         var order = await _orderRepository.GetOrder(orderId);
         order.TotalAmount = (decimal)await GetOrderTotalAmount(orderId);
-        //order.TotalAmount += order.Tip;
         return order;
     }
     
@@ -83,7 +77,6 @@ public class OrderServices : IOrderServices
     public async Task<IEnumerable<Order>> GetOrders()
     {
         var ordersWithTotalAmount = await GetOrdersWithTotalAmount();
-        //return await _orderRepository.GetOrders();
         return ordersWithTotalAmount;
     }
 
